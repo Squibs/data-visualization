@@ -2,10 +2,10 @@ import type { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `Squibs' Gatsby Starter`,
-    description: `My personal starting point for Gatsby projects.`,
+    title: `Squibs fcc Data Visualization`,
+    description: `A combination of all the freeCodeCamp Data Visualization projects.`,
     author: `@SquibsVids`,
-    siteUrl: `https://www.yourdomain.tld`,
+    siteUrl: `https://data-visualization.squibs.vercel.app/`,
   },
   plugins: [
     {
