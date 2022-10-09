@@ -2,9 +2,50 @@
   "name": "data-visualization",
   "version": "1.0.0",
   "description": "A combination of all the freeCodeCamp Data Visualization projects.",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Squibs/gatsby-boilerplate"
   },
   "author": "Zachary Holman",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "start": "npm run clean && npm run develop",
+    "build": "npm run clean && gatsby build",
+    "clean": "gatsby clean",
+    "develop": "gatsby develop -H 0.0.0.0",
+    "serve": "gatsby serve -H 0.0.0.0",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
+    "gatsby": "^4.23.1",
+    "gatsby-plugin-image": "^2.23.1",
+    "gatsby-plugin-manifest": "^4.23.1",
+    "gatsby-plugin-page-creator": "^4.23.1",
+    "gatsby-plugin-sharp": "^4.23.1",
+    "gatsby-plugin-styled-components": "^5.23.0",
+    "gatsby-source-filesystem": "^4.23.0",
+    "gatsby-transformer-sharp": "^4.23.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.4",
+    "styled-components": "^5.3.5",
+    "styled-normalize": "^8.0.7"
+  },
+  "devDependencies": {
+    "@squibs/editor-config": "^1.0.1",
+    "@squibs/eslint-config-typescript-react": "^2.0.3",
+    "@squibs/prettier-config": "^1.0.3",
+    "@squibs/ts-config": "^1.0.1",
+    "@types/styled-components": "^5.1.26"
+  },
+  "prettier": "@squibs/prettier-config",
+  "eslintConfig": {
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "extends": [
+      "@squibs/eslint-config-typescript-react"
+    ]
+  }
 }
