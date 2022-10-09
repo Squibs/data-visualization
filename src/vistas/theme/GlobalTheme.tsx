@@ -2,6 +2,8 @@ import React from 'react';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import { Colors, Breakpoints } from '../design';
 
+// could also use tailwind theme https://github.com/ben-rogerson/twin.macro/pull/106
+
 const mediaQuery = (size: keyof typeof Breakpoints) => {
   if (size === 'for0PhoneOnly') {
     return (cssStyles: TemplateStringsArray) =>

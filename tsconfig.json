@@ -1,4 +1,11 @@
 {
   "extends": "@squibs/ts-config/tsconfig.react.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx", "gatsby-*.js", "gatsby-*.ts", "gatsby-*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "gatsby-*.js",
+    "gatsby-*.ts",
+    "gatsby-*.tsx",
+    "tailwind.config.js"
+  ]
 }
