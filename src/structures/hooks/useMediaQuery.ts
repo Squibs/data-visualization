@@ -21,3 +21,8 @@ const useMediaQuery = (query: string) => {
 };
 
 export default useMediaQuery;
+
+// SOME EXAMPLES:
+// useMediaQuery(`(pointer: fine)`);
+// useMediaQuery(`(min-width: 475px)`);
+// useMediaQuery(`screen and (min-width: 475px)`);
