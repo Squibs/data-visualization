@@ -1,12 +1,8 @@
 import React, { ReactNode, useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import BarChart from './BarChart';
-import ChoroplethMap from './ChoroplethMap';
-import HeatMap from './HeatMap';
+import { BarChart, ScatterplotGraph, HeatMap, ChoroplethMap, TreemapDiagram } from './charts';
 import HomePage from './HomePage';
-import ScatterplotGraph from './ScatterplotGraph';
-import TreemapDiagram from './TreemapDiagram';
 
 /* ---------------------------------- types --------------------------------- */
 
@@ -27,10 +23,10 @@ const NavChevron = tw.svg`fill-current h-4 w-4`;
 
 const NavListContainer = tw.ul`absolute hidden text-gray-700 pt-0.5`;
 
-const NavLink = styled.a<NavLinkProps>`
+const NavLink = styled.button<NavLinkProps>`
   ${({ firstOrLast }) => (firstOrLast === '0' ? tw`rounded-t` : null)}
   ${({ firstOrLast }) => (firstOrLast === '5' ? tw`rounded-b` : null)}
-  ${tw`py-2 px-4 block whitespace-nowrap bg-gray-200 hover:bg-gray-400`}
+  ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:bg-gray-400`}
 `;
 
 /* -------------------------------- component ------------------------------- */
@@ -66,7 +62,6 @@ const Dropdown = ({ updateCurrentGraph }: DropdownProps) => {
           <li key={index}>
             <NavLink
               firstOrLast={index.toString()}
-              href={url}
               onClick={() => {
                 updateCurrentGraph({ project, title });
                 setExpandNav(false);
