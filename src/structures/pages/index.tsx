@@ -1,55 +1,57 @@
 import React, { ReactNode, useState } from 'react';
+import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import {
-  BarChart,
-  ChoroplethMap,
-  HeatMap,
-  HomePage,
-  ScatterplotGraph,
-  SEO,
-  TreemapDiagram,
-} from '../components';
-
-/* --------------------------------- styles --------------------------------- */
-
-const StyledNavA = tw.a`rounded-lg px-3 py-2 text-slate-700 font-medium hover:bg-slate-100 hover:text-slate-900`;
-const Input = () => <input tw="border hover:border-black bg-black" />;
+import { ProjectList, HomePage, SEO } from '../components';
+import { useMediaQuery } from '../hooks';
 
 /* ---------------------------------- types --------------------------------- */
 
-type NavArrayLayout = [[number, string, string, ReactNode]];
+/* --------------------------------- styles --------------------------------- */
+
+const PageContainer = styled.div`
+  ${tw`h-1 min-w-[230px]`}
+
+  .dropdown-menu {
+    display: block;
+  }
+`;
+
+const PageTitle = tw.h1`text-2xl m-4 text-center`;
+
+const ProjectDisplayControls = tw.div`flex justify-between px-0.5 xs:px-2 sm:px-5`;
+const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;
+
+const ProjectContainer = tw.div`m-5`;
 
 /* -------------------------------- component ------------------------------- */
 
 const IndexPage = () => {
   const [currentGraph, setCurrentGraph] = useState<ReactNode>(HomePage);
+  const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
 
-  const handleClick = (project: ReactNode) => {
+  // used to get current graph from dropdown
+  const updateCurrentGraph = ({ project, title }: { project: ReactNode; title: string }) => {
     setCurrentGraph(project);
+    setCurrentGraphTitle(title);
   };
 
   return (
-    <>
-      <h1 tw="text-red-100">Data Visualization</h1>
-      <nav>
-        {(
-          [
-            [0, 'Home', '#', HomePage],
-            [1, 'Bar Chart', '#bar-chart', BarChart],
-            [2, 'Scatterplot Graph', '#scatterplot-graph', ScatterplotGraph],
-            [3, 'Heat Map', '#heat-map', HeatMap],
-            [4, 'Choropleth Map', '#choropleth-map', ChoroplethMap],
-            [5, 'Treemap Diagram', '#treemap-diagram', TreemapDiagram],
-          ] as unknown as NavArrayLayout
-        ).map(([index, title, url, project]) => (
-          <StyledNavA key={index} href={url} onClick={() => handleClick(project)}>
-            {title}
-          </StyledNavA>
-        ))}
-      </nav>
-      <Input />
-      <div>{currentGraph}</div>
-    </>
+    <PageContainer>
+      <PageTitle>Data Visualization</PageTitle>
+      {useMediaQuery(`screen and (max-width: 639px)`) ? (
+        <ProjectDisplayControls>
+          <ProjectList updateCurrentGraph={updateCurrentGraph} currentGraph={currentGraphTitle} />
+          <ProjectDisplayTitle>{currentGraphTitle}</ProjectDisplayTitle>
+        </ProjectDisplayControls>
+      ) : (
+        <ProjectList
+          updateCurrentGraph={updateCurrentGraph}
+          currentGraph={currentGraphTitle}
+          isLargeScreen
+        />
+      )}
+      <ProjectContainer>{currentGraph}</ProjectContainer>
+    </PageContainer>
   );
 };
 
