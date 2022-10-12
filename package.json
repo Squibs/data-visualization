@@ -52,7 +52,8 @@
       "@squibs/eslint-config-typescript-react"
     ],
     "rules": {
-      "react/no-unknown-property": ["error", { "ignore": ["css", "tw"]}]
+      "react/no-unknown-property": ["error", { "ignore": ["css", "tw"]}],
+      "@typescript-eslint/no-unused-expressions": [true, "allow-fast-null-checks"]
     }
   },
   "babelMacros": {
