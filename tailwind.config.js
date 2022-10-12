@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
-    extend: {
-      colors: {
-        electric: '#db00ff',
-        ribbon: '#0047ff',
-      },
+    screens: {
+      xs: '320px',
+      ...defaultTheme.screens,
     },
   },
   plugins: [],
