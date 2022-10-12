@@ -61,6 +61,7 @@ const Dropdown = ({ updateCurrentGraph }: DropdownProps) => {
         ).map(([index, title, url, project]) => (
           <li key={index}>
             <NavLink
+              type="button"
               firstOrLast={index.toString()}
               onClick={() => {
                 updateCurrentGraph({ project, title });
