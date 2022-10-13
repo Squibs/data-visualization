@@ -1,6 +1,7 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
+import type { PageProps } from 'gatsby';
 import { ProjectList, HomePage, SEO } from '../components';
 import { useMediaQuery } from '../hooks';
 
@@ -25,12 +26,12 @@ const ProjectContainer = tw.div`m-5`;
 
 /* -------------------------------- component ------------------------------- */
 
-const IndexPage = () => {
+const IndexPage = ({ location }: PageProps) => {
   const [currentGraph, setCurrentGraph] = useState<ReactNode>(HomePage);
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
 
   // used to get current graph from dropdown
-  const updateCurrentGraph = ({ project, title }: { project: ReactNode; title: string }) => {
+  const updateCurrentGraph = (project: ReactNode, title: string) => {
     setCurrentGraph(project);
     setCurrentGraphTitle(title);
   };
@@ -40,15 +41,11 @@ const IndexPage = () => {
       <PageTitle>Data Visualization</PageTitle>
       {useMediaQuery(`screen and (max-width: 639px)`) ? (
         <ProjectDisplayControls>
-          <ProjectList updateCurrentGraph={updateCurrentGraph} currentGraph={currentGraphTitle} />
+          <ProjectList updateCurrentGraph={updateCurrentGraph} />
           <ProjectDisplayTitle>{currentGraphTitle}</ProjectDisplayTitle>
         </ProjectDisplayControls>
       ) : (
-        <ProjectList
-          updateCurrentGraph={updateCurrentGraph}
-          currentGraph={currentGraphTitle}
-          isLargeScreen
-        />
+        <ProjectList updateCurrentGraph={updateCurrentGraph} isLargeScreen />
       )}
       <ProjectContainer>{currentGraph}</ProjectContainer>
     </PageContainer>

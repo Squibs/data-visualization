@@ -4,6 +4,7 @@ import tw from 'twin.macro';
 import { default as twColors } from 'tailwindcss/colors';
 import { BarChart, ScatterplotGraph, HeatMap, ChoroplethMap, TreemapDiagram } from './charts';
 import HomePage from './HomePage';
+import { navigate } from 'gatsby';
 
 /* ---------------------------------- types --------------------------------- */
 
@@ -13,8 +14,7 @@ type NavLinkProps = { firstOrLast: string } & IsLargeScreenProp;
 type NavArrayLayout = [[number, string, string, ReactNode]];
 
 type ProjectListProps = {
-  updateCurrentGraph: ({ project, title }: { project: ReactNode; title: string }) => void;
-  currentGraph: string;
+  updateCurrentGraph: (project: ReactNode, title: string) => void;
 } & IsLargeScreenProp;
 
 /* --------------------------------- styles --------------------------------- */
@@ -47,7 +47,7 @@ const NavLink = styled.button<NavLinkProps>`
   ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:bg-gray-400 focus:bg-gray-400`}
 
   /* if the element is for large screens */
-  ${({ isLargeScreen, firstOrLast }) => {
+  ${({ isLargeScreen }) => {
     if (isLargeScreen) {
       return tw`text-center`;
     }
@@ -56,12 +56,27 @@ const NavLink = styled.button<NavLinkProps>`
 
 /* -------------------------------- component ------------------------------- */
 
-const ProjectList = ({
-  updateCurrentGraph,
-  currentGraph,
-  isLargeScreen = false,
-}: ProjectListProps) => {
+const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {
   const [expandNav, setExpandNav] = useState(false);
+  const [activeURL, setActiveURL] = useState('/?');
+
+  const graphArray = [
+    [0, 'Home', '/?', HomePage],
+    [1, 'Bar Chart', '/?bar-chart', BarChart],
+    [2, 'Scatterplot Graph', '/?scatterplot-graph', ScatterplotGraph],
+    [3, 'Heat Map', '/?heat-map', HeatMap],
+    [4, 'Choropleth Map', '/?choropleth-map', ChoroplethMap],
+    [5, 'Treemap Diagram', '/?treemap-diagram', TreemapDiagram],
+  ] as unknown as NavArrayLayout;
+
+  // get current url to check for active project (/? - home, /?bar-chart - Bar Chart)
+  useEffect(() => {
+    const windowLocation = window.location.search;
+    setActiveURL(windowLocation === '' ? '/?' : `/${window.location.search}`);
+
+    const currentGraph = graphArray.find((graph) => graph[2] === `/${window.location.search}`);
+    currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1]);
+  }, []);
 
   return (
     <StyledNav
@@ -82,25 +97,18 @@ const ProjectList = ({
           ${expandNav ? 'display: block' : 'display: hidden'}
         `}
       >
-        {(
-          [
-            [0, 'Home', '#', HomePage],
-            [1, 'Bar Chart', '#bar-chart', BarChart],
-            [2, 'Scatterplot Graph', '#scatterplot-graph', ScatterplotGraph],
-            [3, 'Heat Map', '#heat-map', HeatMap],
-            [4, 'Choropleth Map', '#choropleth-map', ChoroplethMap],
-            [5, 'Treemap Diagram', '#treemap-diagram', TreemapDiagram],
-          ] as unknown as NavArrayLayout
-        ).map(([index, title, url, project]) => (
+        {graphArray.map(([index, title, url, project]) => (
           <li key={index}>
             <NavLink
               isLargeScreen={isLargeScreen}
               type="button"
               firstOrLast={index.toString()}
-              className={currentGraph === title ? 'active' : ''}
-              onClick={(e) => {
-                updateCurrentGraph({ project, title });
+              className={activeURL === url ? 'active' : ''}
+              onClick={() => {
+                setActiveURL(url);
+                updateCurrentGraph(project, title);
                 setExpandNav(false);
+                navigate(url);
               }}
             >
               {title}
