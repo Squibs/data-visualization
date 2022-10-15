@@ -41,6 +41,7 @@
     "@squibs/eslint-config-typescript-react": "^2.0.3",
     "@squibs/prettier-config": "^1.0.3",
     "@squibs/ts-config": "^1.0.1",
+    "@types/d3": "^7.4.0",
     "@types/styled-components": "^5.1.26",
     "babel-preset-gatsby": "^2.24.0"
   },
