@@ -26,30 +26,34 @@ const StyledNav = styled.nav<IsLargeScreenProp>`
     background-color: ${twColors.gray[400]}; // bg-gray-400
   }
 
-  ${({ isLargeScreen }) => isLargeScreen && tw`w-full`}
+  ${({ isLargeScreen }) => isLargeScreen && tw`w-full lg:(max-w-fit flex m-auto)`}
 `;
 
+// mobile dropdown
 const NavButton = tw.button`bg-gray-300 text-gray-700 font-semibold py-2 px-3 rounded inline-flex items-center mr-0.5`;
-
 const NavChevron = tw.svg`fill-current h-4 w-4`;
 
+// list of nav items / charts <ul>
 const NavListContainer = styled.ul<IsLargeScreenProp>`
   ${tw`absolute hidden text-gray-700 pt-0.5`}
 
-  ${({ isLargeScreen }) => isLargeScreen && tw`relative grid grid-cols-3 grid-rows-2 w-full `}
+  ${({ isLargeScreen }) =>
+    isLargeScreen && tw`relative grid grid-cols-3 grid-rows-2 w-full lg:(flex w-full)`}
 `;
 
-// when the css has more logic than anything else
+// <li><button></li>
+const NavLinkContainer = tw.li`lg:(mx-2)`;
 const NavLink = styled.button<NavLinkProps>`
+  /* when the css has more logic than anything else */
   /* rounded corners on top and bottom */
   ${({ firstOrLast }) =>
     ['0', '5'].includes(firstOrLast) && firstOrLast === '0' ? tw`rounded-t` : tw`rounded-b`}
-  ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:bg-gray-400 focus:bg-gray-400`}
+  ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:(bg-gray-400) focus:(bg-gray-400)`}
 
   /* if the element is for large screens */
   ${({ isLargeScreen }) => {
     if (isLargeScreen) {
-      return tw`text-center`;
+      return tw`text-center rounded-none`;
     }
   }}
 `;
@@ -98,7 +102,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
         `}
       >
         {graphArray.map(([index, title, url, project]) => (
-          <li key={index}>
+          <NavLinkContainer key={index}>
             <NavLink
               isLargeScreen={isLargeScreen}
               type="button"
@@ -113,7 +117,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
             >
               {title}
             </NavLink>
-          </li>
+          </NavLinkContainer>
         ))}
       </NavListContainer>
     </StyledNav>
