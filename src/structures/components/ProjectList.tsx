@@ -65,12 +65,12 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
   const [activeURL, setActiveURL] = useState('/?');
 
   const graphArray = [
-    [0, 'Home', '/?', HomePage],
-    [1, 'Bar Chart', '/?bar-chart', BarChart],
-    [2, 'Scatterplot Graph', '/?scatterplot-graph', ScatterplotGraph],
-    [3, 'Heat Map', '/?heat-map', HeatMap],
-    [4, 'Choropleth Map', '/?choropleth-map', ChoroplethMap],
-    [5, 'Treemap Diagram', '/?treemap-diagram', TreemapDiagram],
+    [0, 'Home', '/?', <HomePage />],
+    [1, 'Bar Chart', '/?bar-chart', <BarChart />],
+    [2, 'Scatterplot Graph', '/?scatterplot-graph', <ScatterplotGraph />],
+    [3, 'Heat Map', '/?heat-map', <HeatMap />],
+    [4, 'Choropleth Map', '/?choropleth-map', <ChoroplethMap />],
+    [5, 'Treemap Diagram', '/?treemap-diagram', <TreemapDiagram />],
   ] as unknown as NavArrayLayout;
 
   // get current url to check for active project (/? - home, /?bar-chart - Bar Chart)
