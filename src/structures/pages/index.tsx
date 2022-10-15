@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import type { PageProps } from 'gatsby';
 import { ProjectList, HomePage, SEO } from '../components';
 import { useMediaQuery } from '../hooks';
 
@@ -26,7 +25,7 @@ const ProjectContainer = tw.div`m-5`;
 
 /* -------------------------------- component ------------------------------- */
 
-const IndexPage = ({ location }: PageProps) => {
+const IndexPage = () => {
   const [currentGraph, setCurrentGraph] = useState<ReactNode>(HomePage);
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
 
