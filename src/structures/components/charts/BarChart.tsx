@@ -91,13 +91,12 @@ const BarChart = () => {
 
       const minDate = d3.min(dateDataSet, (d) => new Date(d)) as Date;
       const maxDate = d3.max(dateDataSet, (d) => new Date(d)) as Date;
-      const minGDP = d3.min(gdpDataSet, (d) => d) as number;
       const maxGDP = d3.max(gdpDataSet, (d) => d) as number;
 
       maxDate.setMonth(maxDate.getMonth() + 2); // extends domain a little so x-axis label lines up
 
       const xScale = d3.scaleTime().domain([minDate, maxDate]).range([0, width]);
-      const yScale = d3.scaleLinear().domain([minGDP, maxGDP]).range([height, 0]);
+      const yScale = d3.scaleLinear().domain([0, maxGDP]).range([height, 0]);
       const scaleGDP = d3.scaleLinear().domain([0, maxGDP]).range([0, height]);
 
       // select premade svg and assign width/height
