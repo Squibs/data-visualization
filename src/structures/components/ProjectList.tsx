@@ -1,10 +1,10 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { navigate } from 'gatsby';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import { default as twColors } from 'tailwindcss/colors';
+import twColors from 'tailwindcss/colors';
 import { BarChart, ScatterplotGraph, HeatMap, ChoroplethMap, TreemapDiagram } from './charts';
 import HomePage from './HomePage';
-import { navigate } from 'gatsby';
 
 /* ---------------------------------- types --------------------------------- */
 
@@ -51,27 +51,23 @@ const NavLink = styled.button<NavLinkProps>`
   ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:(bg-gray-400) focus:(bg-gray-400)`}
 
   /* if the element is for large screens */
-  ${({ isLargeScreen }) => {
-    if (isLargeScreen) {
-      return tw`text-center rounded-none`;
-    }
-  }}
+  ${({ isLargeScreen }) => isLargeScreen && tw`text-center rounded-none`}
 `;
 
 /* -------------------------------- component ------------------------------- */
 
+const graphArray = [
+  [0, 'Home', '/?', <HomePage />],
+  [1, 'Bar Chart', '/?bar-chart', <BarChart />],
+  [2, 'Scatterplot Graph', '/?scatterplot-graph', <ScatterplotGraph />],
+  [3, 'Heat Map', '/?heat-map', <HeatMap />],
+  [4, 'Choropleth Map', '/?choropleth-map', <ChoroplethMap />],
+  [5, 'Treemap Diagram', '/?treemap-diagram', <TreemapDiagram />],
+] as unknown as NavArrayLayout;
+
 const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {
   const [expandNav, setExpandNav] = useState(false);
   const [activeURL, setActiveURL] = useState('/?');
-
-  const graphArray = [
-    [0, 'Home', '/?', <HomePage />],
-    [1, 'Bar Chart', '/?bar-chart', <BarChart />],
-    [2, 'Scatterplot Graph', '/?scatterplot-graph', <ScatterplotGraph />],
-    [3, 'Heat Map', '/?heat-map', <HeatMap />],
-    [4, 'Choropleth Map', '/?choropleth-map', <ChoroplethMap />],
-    [5, 'Treemap Diagram', '/?treemap-diagram', <TreemapDiagram />],
-  ] as unknown as NavArrayLayout;
 
   // get current url to check for active project (/? - home, /?bar-chart - Bar Chart)
   useEffect(() => {
@@ -80,7 +76,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
 
     const currentGraph = graphArray.find((graph) => graph[2] === `/${window.location.search}`);
     currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1]);
-  }, []);
+  }, [updateCurrentGraph]);
 
   return (
     <StyledNav
@@ -125,5 +121,9 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
 };
 
 /* -------------------- default props / queries / exports ------------------- */
+
+ProjectList.defaultProps = {
+  isLargeScreen: false,
+};
 
 export default ProjectList;

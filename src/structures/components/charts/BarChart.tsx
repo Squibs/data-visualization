@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import * as d3 from 'd3';
+import styled from 'styled-components';
 import getDataFromAPI from '../../utils/getDataFromAPI';
 import fakeData from '../../../data/data-backup-bar-chart-(US GDP).json';
-import styled from 'styled-components';
+import { useWindowDimensions } from '../../hooks';
 
 /* --------------------------------- styles --------------------------------- */
 
 const BarChartPageContainer = tw.div``;
 
-const BarChartContainer = tw.div``;
+const BarChartContainer = tw.div`flex flex-col justify-center items-center w-full`;
 const D3BarChart = styled.svg`
+  /* transform: scale(0.5); */
   & rect {
     ${tw`fill-amber-600 hover:fill-blue-900`}
   }
@@ -68,7 +70,7 @@ const BarChart = () => {
     const tempData = () => {
       setLoading(false);
       setError(null);
-      setData(fakeData as any);
+      setData(fakeData as unknown as USGDPData);
     };
 
     // getData();
@@ -81,9 +83,9 @@ const BarChart = () => {
       const dataset = data.data; // [date-string, gdp-number]
       const dateDataSet = dataset.map((d) => d[0]);
       const gdpDataSet = dataset.map((d) => d[1]);
+      const margin = 60;
       const width = 800;
       const height = 400;
-      const margin = 60;
 
       const minDate = d3.min(dateDataSet, (d) => new Date(d)) as Date;
       const maxDate = d3.max(dateDataSet, (d) => new Date(d)) as Date;
@@ -151,46 +153,51 @@ const BarChart = () => {
         .call(d3.axisLeft(yScale))
         .attr('transform', `translate(${margin}, ${margin})`);
     }
-  });
+  }, [data]);
 
   return (
     <BarChartPageContainer>
       {loading && <h1>Loading Data...</h1>}
       {error && <div>{`There was a problem fetching the data - ${error}`}</div>}
       {data && (
-        <>
-          <BarChartContainer>
-            <h1 id="title">TITLE OF MY CHART</h1>
-            <D3BarChartToolTip id="tooltip" ref={tooltipRef} />
-            <D3BarChart ref={svgRef} />
-            <DataInformation>
-              <ul>
-                <li>
-                  Data size:{' '}
-                  {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)} KB
-                </li>
-                <li>
-                  Last updated:{' '}
-                  {new Date(data.updated_at).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </li>
-                <li>
-                  <a
-                    tw="text-blue-900 hover:text-red-900"
-                    href="https://fred.stlouisfed.org/data/GDP.txt"
-                    target="_blank"
-                  >
-                    Source
-                  </a>{' '}
-                  of Data
-                </li>
-              </ul>
-            </DataInformation>
-          </BarChartContainer>
-        </>
+        <BarChartContainer>
+          <h1 id="title" tw="text-center text-2xl font-medium">
+            United States GDP (1946 - 2015)
+          </h1>
+          <D3BarChartToolTip id="tooltip" ref={tooltipRef} />
+          <D3BarChart ref={svgRef} />
+          <DataInformation>
+            <ul>
+              <li>
+                Data size:
+                {'\u00A0'}
+                {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)}
+                KB
+              </li>
+              <li>
+                Last updated:
+                {'\u00A0'}
+                {new Date(data.updated_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </li>
+              <li>
+                <a
+                  tw="text-blue-900 hover:text-red-900"
+                  href="https://fred.stlouisfed.org/data/GDP.txt"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Source
+                </a>
+                {'\u00A0'}
+                of Data
+              </li>
+            </ul>
+          </DataInformation>
+        </BarChartContainer>
       )}
     </BarChartPageContainer>
   );
