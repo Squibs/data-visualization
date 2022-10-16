@@ -5,7 +5,7 @@ const getDataFromAPI = async (
   url: string,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setError: React.Dispatch<React.SetStateAction<string | null>>,
-  setData: React.Dispatch<React.SetStateAction<null>>,
+  setData: React.Dispatch<React.SetStateAction<any>>,
 ) => {
   try {
     const response = await fetch(url);
