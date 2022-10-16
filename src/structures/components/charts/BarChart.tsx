@@ -76,10 +76,6 @@ const BarChart = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(data);
-    // console.log(loading);
-    // console.log(error);
-
     if (data) {
       const tooltip = d3.select(tooltipRef.current);
       const dataset = data.data; // [date-string, gdp-number]
@@ -122,7 +118,6 @@ const BarChart = () => {
           tooltip.style('opacity', 1);
         })
         .on('mousemove', (e) => {
-          console.log(e);
           tooltip
             .html(
               `<small>${new Date(e.target.dataset.date).toLocaleDateString('en-US', {
