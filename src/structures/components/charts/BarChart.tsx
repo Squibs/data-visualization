@@ -3,12 +3,17 @@ import tw from 'twin.macro';
 import * as d3 from 'd3';
 import getDataFromAPI from '../../utils/getDataFromAPI';
 import fakeData from '../../../data/data-backup-bar-chart-(US GDP).json';
+import styled from 'styled-components';
 
 /* --------------------------------- styles --------------------------------- */
 
 const BarChartContainer = tw.div``;
 
-const D3BarChart = tw.svg``;
+const D3BarChart = styled.svg`
+  & rect {
+    ${tw`fill-amber-600 hover:fill-blue-900`}
+  }
+`;
 
 const DataInformation = tw.div``;
 
@@ -71,33 +76,57 @@ const BarChart = () => {
 
     if (data) {
       console.log(data);
-      const dataset = data.data;
+      const dataset = data.data; // [date-string, gdp-number]
+      const dateDataSet = dataset.map((d) => d[0]);
+      const gdpDataSet = dataset.map((d) => d[1]);
       const width = 800;
       const height = 400;
       const margin = 60;
 
-      const minDate = d3.min(dataset, (d) => new Date(d[0])) as Date;
-      const maxDate = d3.max(dataset, (d) => new Date(d[0])) as Date;
-      const minGDP = d3.min(dataset, (d) => d[1]) as number;
-      const maxGDP = d3.max(dataset, (d) => d[1]) as number;
+      const minDate = d3.min(dateDataSet, (d) => new Date(d)) as Date;
+      const maxDate = d3.max(dateDataSet, (d) => new Date(d)) as Date;
+      const minGDP = d3.min(gdpDataSet, (d) => d) as number;
+      const maxGDP = d3.max(gdpDataSet, (d) => d) as number;
+
+      maxDate.setMonth(maxDate.getMonth() + 2); // extends domain a little so x-axis label lines up
 
       const xScale = d3.scaleTime().domain([minDate, maxDate]).range([0, width]);
-      const yScale = d3.scaleLinear().domain([0, maxGDP]).range([height, 0]);
+      const yScale = d3.scaleLinear().domain([minGDP, maxGDP]).range([height, 0]);
+      const scaleGDP = d3.scaleLinear().domain([0, maxGDP]).range([0, height]);
 
+      // select premade svg and assign width/height
       const svg = d3
         .select(svgRef.current)
-        .attr('width', width + margin)
-        .attr('height', height + margin);
+        .attr('width', width + margin * 2)
+        .attr('height', height + margin * 2);
 
+      // bar-chart bars
       svg
         .selectAll('rect')
-        .data(dataset)
+        .data(gdpDataSet.map((d) => scaleGDP(d)))
         .enter()
         .append('rect')
-        .attr('x', (d) => xScale(new Date(d[0])))
-        .attr('y', (d) => yScale(d[1]))
-        .attr('height', (d) => d[1])
-        .attr('width', 2);
+        .attr('class', 'bar')
+        .attr('data-date', (d, i) => `${dateDataSet[i]}`)
+        .attr('data-gdp', (d, i) => `${gdpDataSet[i]}`)
+        .attr('x', (d, i) => xScale(new Date(dateDataSet[i])) + margin)
+        .attr('y', (d) => height - d + margin)
+        .attr('width', width / (dataset.length + margin / 2))
+        .attr('height', (d) => d);
+
+      // x-axis label
+      svg
+        .append('g')
+        .attr('id', 'x-axis')
+        .call(d3.axisBottom(xScale))
+        .attr('transform', `translate(${margin}, ${height + margin})`);
+
+      // y-axis label
+      svg
+        .append('g')
+        .attr('id', 'y-axis')
+        .call(d3.axisLeft(yScale))
+        .attr('transform', `translate(${margin}, ${margin})`);
     }
   });
 
