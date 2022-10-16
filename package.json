@@ -64,8 +64,8 @@
         }
       ],
       "@typescript-eslint/no-unused-expressions": [
-        true,
-        "allow-fast-null-checks"
+        "error",
+        { "allowShortCircuit": true }
       ]
     }
   },
