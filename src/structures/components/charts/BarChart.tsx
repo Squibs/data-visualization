@@ -7,12 +7,17 @@ import styled from 'styled-components';
 
 /* --------------------------------- styles --------------------------------- */
 
-const BarChartContainer = tw.div``;
+const BarChartPageContainer = tw.div``;
 
+const BarChartContainer = tw.div``;
 const D3BarChart = styled.svg`
   & rect {
     ${tw`fill-amber-600 hover:fill-blue-900`}
   }
+`;
+const D3BarChartToolTip = tw.div`
+  opacity-0 absolute p-1 w-32 h-16 bg-white transition text-center
+  pointer-events-none border-2 border-solid rounded-md border-black
 `;
 
 const DataInformation = tw.div``;
@@ -48,6 +53,7 @@ const BarChart = () => {
   const [data, setData] = useState<USGDPData | null>(null);
 
   const svgRef = useRef(null);
+  const tooltipRef = useRef(null);
 
   // fetch data from freeCodeCamp onMount
   useEffect(() => {
@@ -75,7 +81,7 @@ const BarChart = () => {
     // console.log(error);
 
     if (data) {
-      console.log(data);
+      const tooltip = d3.select(tooltipRef.current);
       const dataset = data.data; // [date-string, gdp-number]
       const dateDataSet = dataset.map((d) => d[0]);
       const gdpDataSet = dataset.map((d) => d[1]);
@@ -112,7 +118,30 @@ const BarChart = () => {
         .attr('x', (d, i) => xScale(new Date(dateDataSet[i])) + margin)
         .attr('y', (d) => height - d + margin)
         .attr('width', width / (dataset.length + margin / 2))
-        .attr('height', (d) => d);
+        .attr('height', (d) => d)
+        .on('mouseover', (e, d) => {
+          tooltip.style('opacity', 1);
+        })
+        .on('mousemove', (e) => {
+          console.log(e);
+          tooltip
+            .html(
+              `<small>${new Date(e.target.dataset.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}\n${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+                e.target.dataset.gdp,
+              )} billion</small>`,
+            )
+            .attr('data-date', e.target.dataset.date)
+            .attr('data-gdp', e.target.dataset.gdp)
+            .style('left', `${d3.pointer(e)[0] - 45}px`)
+            .style('top', `${d3.pointer(e)[1] + 60}px`);
+        })
+        .on('mouseleave', () => {
+          tooltip.style('opacity', 0);
+        });
 
       // x-axis label
       svg
@@ -131,42 +160,45 @@ const BarChart = () => {
   });
 
   return (
-    <BarChartContainer>
+    <BarChartPageContainer>
       {loading && <h1>Loading Data...</h1>}
       {error && <div>{`There was a problem fetching the data - ${error}`}</div>}
       {data && (
         <>
-          <h1 id="title">TITLE OF MY CHART</h1>
-          <D3BarChart ref={svgRef} />
-          <DataInformation>
-            <ul>
-              <li>
-                Data size:{' '}
-                {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)} KB
-              </li>
-              <li>
-                Last updated:{' '}
-                {new Date(data.updated_at).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
-              </li>
-              <li>
-                <a
-                  tw="text-blue-900 hover:text-red-900"
-                  href="https://fred.stlouisfed.org/data/GDP.txt"
-                  target="_blank"
-                >
-                  Source
-                </a>{' '}
-                of Data
-              </li>
-            </ul>
-          </DataInformation>
+          <BarChartContainer>
+            <h1 id="title">TITLE OF MY CHART</h1>
+            <D3BarChartToolTip id="tooltip" ref={tooltipRef} />
+            <D3BarChart ref={svgRef} />
+            <DataInformation>
+              <ul>
+                <li>
+                  Data size:{' '}
+                  {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)} KB
+                </li>
+                <li>
+                  Last updated:{' '}
+                  {new Date(data.updated_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </li>
+                <li>
+                  <a
+                    tw="text-blue-900 hover:text-red-900"
+                    href="https://fred.stlouisfed.org/data/GDP.txt"
+                    target="_blank"
+                  >
+                    Source
+                  </a>{' '}
+                  of Data
+                </li>
+              </ul>
+            </DataInformation>
+          </BarChartContainer>
         </>
       )}
-    </BarChartContainer>
+    </BarChartPageContainer>
   );
 };
 
