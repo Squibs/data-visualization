@@ -9,7 +9,7 @@ import fakeData from '../../../data/data-backup-bar-chart-(US GDP).json';
 
 const BarChartPageContainer = tw.div``;
 
-const BarChartContainer = tw.div`w-full h-auto ml-2 max-w-screen-xl`;
+const BarChartContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
 const D3BarChart = styled.svg`
   height: 100%;
   width: 100%;
@@ -173,10 +173,12 @@ const BarChart = () => {
     <BarChartPageContainer>
       {loading && <h1>Loading Data...</h1>}
       {error && <div>{`There was a problem fetching the data - ${error}`}</div>}
-      {data && (
+      {data && !loading && (
         <>
           <h1 id="title" tw="text-center text-2xl font-medium">
-            United States GDP (1946 - 2015)
+            United States GDP
+            {` (${String(d3.min(data.data.map((d) => d[0]))).slice(0, 4)} - `}
+            {`${String(d3.max(data.data.map((d) => d[0]))).slice(0, 4)})`}
           </h1>
           {createBarChart(data)}
           <DataInformation>
