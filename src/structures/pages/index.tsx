@@ -11,6 +11,9 @@ import { useMediaQuery } from '../hooks';
 const PageContainer = styled.div`
   ${tw`min-w-[230px] flex flex-col h-full`}
 
+  background-color: #2c2c2c;
+  color: #9d9d9d;
+
   & div:first-child {
     flex: 1 0 auto;
   }
@@ -20,7 +23,7 @@ const PageContainer = styled.div`
   }
 `;
 
-const PageTitle = tw.h1`text-2xl m-4 text-center`;
+const PageTitle = tw.h1`text-4xl m-4 text-center`;
 
 const ProjectDisplayControls = tw.div`flex justify-between px-0.5 xs:(px-2) sm:(px-5)`;
 const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;

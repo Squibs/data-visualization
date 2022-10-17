@@ -18,7 +18,7 @@ const D3BarChart = styled.svg`
   }
 `;
 const D3BarChartToolTip = tw.div`
-  opacity-0 absolute p-1 w-32 h-16 bg-white transition text-center
+  opacity-0 absolute p-1 w-32 h-16 bg-white transition text-center text-black
   pointer-events-none border-2 border-solid rounded-md border-black
 `;
 
@@ -141,7 +141,7 @@ const BarChart = () => {
           viewBox={`0 0 ${width + margin * 2} ${height + margin * 2}`}
           preserveAspectRatio="xMinYMin meet"
         >
-          <text className="y-axis-label">
+          <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
             <tspan>Gross Domestic Product</tspan>
             <tspan x="45" dy="1.2em">
               (In Billions)
@@ -194,31 +194,38 @@ const BarChart = () => {
           {createBarChart(data)}
           <DataInformation>
             <li key="0">
-              Data size:
+              Updated:
               {'\u00A0'}
-              {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)}
-              KB
+              <i>
+                {new Date(data.updated_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </i>
             </li>
             <li key="1">
-              Last updated:
+              Size:
               {'\u00A0'}
-              {new Date(data.updated_at).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })}
+              <i>
+                {(new TextEncoder().encode(JSON.stringify(data)).length / 1024).toFixed(2)}
+                {'\u00A0'}
+                KB
+              </i>
             </li>
             <li key="2">
-              <a
-                tw="text-blue-600 hover:text-red-900"
-                href="https://fred.stlouisfed.org/data/GDP.txt"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Source
-              </a>
+              Data:
               {'\u00A0'}
-              of Data
+              <i>
+                <a
+                  tw="text-blue-600 hover:text-red-900"
+                  href="https://fred.stlouisfed.org/data/GDP.txt"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Source
+                </a>
+              </i>
             </li>
           </DataInformation>
         </>
