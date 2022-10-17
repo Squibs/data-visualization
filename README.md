@@ -14,6 +14,4 @@ A collection of all the freeCodeCamp _Data Visualization_ projects that I have c
 
 A single site that is a collection of all the [D3](https://d3js.org/) projects I created that are required to get the freeCodeCamp _Data Visualization_ certification ([my certification]()).
 
-Each of these charts pulls in the data from various freeCodeCamp supplied GitHub endpoints / repositories via fetch requests.
-
-The data is then processed through the use of D3 to provide a visualization of the data.
+Each of these charts pulls in the data from various freeCodeCamp supplied GitHub endpoints / repositories via fetch requests. The data is then processed through the use of D3 to provide a visualization of the data.
