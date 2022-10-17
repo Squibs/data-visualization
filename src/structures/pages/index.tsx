@@ -21,7 +21,18 @@ const PageTitle = tw.h1`text-2xl m-4 text-center`;
 const ProjectDisplayControls = tw.div`flex justify-between px-0.5 xs:(px-2) sm:(px-5)`;
 const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;
 
-const ProjectContainer = tw.div`m-5`;
+const ProjectContainer = tw.div`max-w-screen-xl m-auto p-5 pb-0`;
+
+const StyledFooter = styled.footer`
+  ${tw`text-center pb-5`}
+
+  font-family: 'Righteous', cursive;
+
+  & a {
+    text-decoration: none;
+    color: #c0392b;
+  }
+`;
 
 /* -------------------------------- component ------------------------------- */
 
@@ -47,6 +58,10 @@ const IndexPage = () => {
         <ProjectList updateCurrentGraph={updateCurrentGraph} isLargeScreen />
       )}
       <ProjectContainer>{currentGraph}</ProjectContainer>
+      <StyledFooter>
+        Designed &amp; Coded by
+        <a href="https://github.com/squibs"> Zachary Holman</a>
+      </StyledFooter>
     </PageContainer>
   );
 };
