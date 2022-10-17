@@ -72,9 +72,15 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
   // get current url to check for active project (/? - home, /?bar-chart - Bar Chart)
   useEffect(() => {
     const windowLocation = window.location.search;
-    setActiveURL(windowLocation === '' ? '/?' : `/${window.location.search}`);
+    let updatedLocation = windowLocation === '' ? '/?' : `/${window.location.search}`;
 
-    const currentGraph = graphArray.find((graph) => graph[2] === `/${window.location.search}`);
+    // needed for freeCodeCamp, they append '=' at the end of my url for whatever reason
+    // probably because i'm doing this all weird and using the usual query/search symbol '?'
+    if (updatedLocation.endsWith('=')) updatedLocation = updatedLocation.slice(0, -1);
+
+    setActiveURL(updatedLocation);
+
+    const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation}`);
     currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1]);
   }, [updateCurrentGraph]);
 
