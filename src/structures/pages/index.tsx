@@ -23,7 +23,7 @@ const PageContainer = styled.div`
   }
 `;
 
-const PageTitle = tw.h1`text-4xl m-4 text-center`;
+const PageTitle = tw.h1`text-2xl m-4 text-center`;
 
 const ProjectDisplayControls = tw.div`flex justify-between px-0.5 xs:(px-2) sm:(px-5)`;
 const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;
