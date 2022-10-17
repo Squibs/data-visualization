@@ -7,7 +7,7 @@ import fakeData from '../../../data/data-backup-bar-chart-(US GDP).json';
 
 /* --------------------------------- styles --------------------------------- */
 
-const BarChartPageContainer = tw.div``;
+const BarChartPageContainer = tw.div`w-full`;
 
 const BarChartContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
 const D3BarChart = styled.svg`
@@ -87,6 +87,10 @@ const BarChart = () => {
       .call(d3.axisLeft(yScale) as any)
       .attr('transform', `translate(${margin}, ${margin})`);
 
+    svg
+      .select('.y-axis-label')
+      .attr('transform', `translate(${margin + 20}, ${height / 2 + 40}) rotate(-90)`);
+
     // bars
     svg
       .select('.plot-area')
@@ -98,7 +102,7 @@ const BarChart = () => {
       .attr('width', width / (dataset.length + margin / 2))
       .attr('y', (d) => height - d + margin)
       .attr('height', (d) => d)
-      // these two attributes are accessible in mouse events
+      /* these two attributes are accessible in mouse events */
       .attr('data-date', (d, i) => `${dateDataSet[i]}`)
       .attr('data-gdp', (d, i) => `${gdpDataSet[i]}`);
 
@@ -136,6 +140,7 @@ const BarChart = () => {
           viewBox={`0 0 ${width + margin * 2} ${height + margin * 2}`}
           preserveAspectRatio="xMinYMin meet"
         >
+          <text className="y-axis-label">Gross Domestic Product</text>
           <g className="plot-area" />
           <g id="x-axis" />
           <g id="y-axis" />
@@ -199,7 +204,7 @@ const BarChart = () => {
             </li>
             <li key="2">
               <a
-                tw="text-blue-900 hover:text-red-900"
+                tw="text-blue-600 hover:text-red-900"
                 href="https://fred.stlouisfed.org/data/GDP.txt"
                 target="_blank"
                 rel="noreferrer"
