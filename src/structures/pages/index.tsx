@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { ReactNode, useCallback, useState } from 'react';
+import styled from 'styled-components';
 import tw from 'twin.macro';
 import { ProjectList, HomePage, SEO } from '../components';
 import { useMediaQuery } from '../hooks';
@@ -30,10 +30,10 @@ const IndexPage = () => {
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
 
   // used to get current graph from dropdown
-  const updateCurrentGraph = (project: ReactNode, title: string) => {
+  const updateCurrentGraph = useCallback((project: ReactNode, title: string) => {
     setCurrentGraph(project);
     setCurrentGraphTitle(title);
-  };
+  }, []);
 
   return (
     <PageContainer>
