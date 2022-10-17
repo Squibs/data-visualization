@@ -40,6 +40,12 @@ const config: GatsbyConfig = {
       },
     },
     `gatsby-plugin-styled-components`, // styled-components
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [`Righteous`],
+      },
+    },
   ],
 };
 
