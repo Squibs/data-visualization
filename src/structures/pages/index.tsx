@@ -60,7 +60,7 @@ const IndexPage = () => {
       <ProjectContainer>{currentGraph}</ProjectContainer>
       <StyledFooter>
         Designed &amp; Coded by
-        <a href="https://github.com/squibs"> Zachary Holman</a>
+        <a href="https://zachary-holman.netlify.app/"> Zachary Holman</a>
       </StyledFooter>
     </PageContainer>
   );
