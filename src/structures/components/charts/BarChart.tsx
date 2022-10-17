@@ -87,6 +87,7 @@ const BarChart = () => {
       .call(d3.axisLeft(yScale) as any)
       .attr('transform', `translate(${margin}, ${margin})`);
 
+    // y-axis label
     svg
       .select('.y-axis-label')
       .attr('transform', `translate(${margin + 20}, ${height / 2 + 40}) rotate(-90)`);
@@ -140,7 +141,12 @@ const BarChart = () => {
           viewBox={`0 0 ${width + margin * 2} ${height + margin * 2}`}
           preserveAspectRatio="xMinYMin meet"
         >
-          <text className="y-axis-label">Gross Domestic Product</text>
+          <text className="y-axis-label">
+            <tspan>Gross Domestic Product</tspan>
+            <tspan x="45" dy="1.2em">
+              (In Billions)
+            </tspan>
+          </text>
           <g className="plot-area" />
           <g id="x-axis" />
           <g id="y-axis" />
