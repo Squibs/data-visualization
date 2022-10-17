@@ -9,7 +9,11 @@ import { useMediaQuery } from '../hooks';
 /* --------------------------------- styles --------------------------------- */
 
 const PageContainer = styled.div`
-  ${tw`h-1 min-w-[230px]`}
+  ${tw`min-w-[230px] flex flex-col h-full`}
+
+  & div:first-child {
+    flex: 1 0 auto;
+  }
 
   .dropdown-menu {
     display: block;
@@ -26,7 +30,13 @@ const ProjectContainer = tw.div`max-w-screen-xl m-auto p-5 pb-0`;
 const StyledFooter = styled.footer`
   ${tw`text-center pb-5`}
 
+  flex-shrink: 0;
   font-family: 'Righteous', cursive;
+  overflow: hidden;
+  display: inline-flex;
+  margin: auto;
+  flex-wrap: wrap;
+  justify-content: center;
 
   & a {
     text-decoration: none;
@@ -48,19 +58,23 @@ const IndexPage = () => {
 
   return (
     <PageContainer>
-      <PageTitle>Data Visualization</PageTitle>
-      {useMediaQuery(`screen and (max-width: 639px)`) ? (
-        <ProjectDisplayControls>
-          <ProjectList updateCurrentGraph={updateCurrentGraph} />
-          <ProjectDisplayTitle>{currentGraphTitle}</ProjectDisplayTitle>
-        </ProjectDisplayControls>
-      ) : (
-        <ProjectList updateCurrentGraph={updateCurrentGraph} isLargeScreen />
-      )}
-      <ProjectContainer>{currentGraph}</ProjectContainer>
+      <div>
+        <PageTitle>Data Visualization</PageTitle>
+        {useMediaQuery(`screen and (max-width: 639px)`) ? (
+          <ProjectDisplayControls>
+            <ProjectList updateCurrentGraph={updateCurrentGraph} />
+            <ProjectDisplayTitle>{currentGraphTitle}</ProjectDisplayTitle>
+          </ProjectDisplayControls>
+        ) : (
+          <ProjectList updateCurrentGraph={updateCurrentGraph} isLargeScreen />
+        )}
+        <ProjectContainer>{currentGraph}</ProjectContainer>
+      </div>
       <StyledFooter>
-        Designed &amp; Coded by
-        <a href="https://zachary-holman.netlify.app/"> Zachary Holman</a>
+        <span>Designed &amp; Coded by&nbsp;</span>
+        <span>
+          <a href="https://zachary-holman.netlify.app/">Zachary Holman</a>
+        </span>
       </StyledFooter>
     </PageContainer>
   );
