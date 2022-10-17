@@ -218,7 +218,7 @@ const BarChart = () => {
               {'\u00A0'}
               <i>
                 <a
-                  tw="text-blue-600 hover:text-red-900"
+                  tw="text-linkcolor hover:text-cyan-400"
                   href="https://fred.stlouisfed.org/data/GDP.txt"
                   target="_blank"
                   rel="noreferrer"

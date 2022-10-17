@@ -8,6 +8,11 @@ module.exports = {
       xs: '320px',
       ...defaultTheme.screens,
     },
+    extend: {
+      colors: {
+        linkcolor: '#bb0d00',
+      },
+    },
   },
   plugins: [],
 };

@@ -43,7 +43,7 @@ const StyledFooter = styled.footer`
 
   & a {
     text-decoration: none;
-    color: #c0392b;
+    ${tw`text-linkcolor hover:text-cyan-400`}
   }
 `;
 
