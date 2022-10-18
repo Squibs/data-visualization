@@ -41,6 +41,7 @@ const StyledFooter = styled.footer`
   flex-wrap: wrap;
   justify-content: center;
   background-color: #2c2c2c;
+  width: 100%;
 
   & a {
     text-decoration: none;
