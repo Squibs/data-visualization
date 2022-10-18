@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
+import styled from 'styled-components';
+import * as d3 from 'd3';
 import getDataFromAPI from '../../utils/getDataFromAPI';
 import fakeData from '../../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
 
 /* --------------------------------- styles --------------------------------- */
 
-const ScatterplotGraphPageContainer = tw.div``;
-const ScatterplotGraphContainer = tw.div``;
-const D3ScatterplotGraph = tw.svg``;
+const ScatterplotGraphPageContainer = tw.div`w-full`;
+const ScatterplotGraphContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
+const D3ScatterplotGraph = styled.svg`
+  height: 100%;
+  width: 100%;
+`;
 const D3ScatterplotGraphToolTip = tw.div``;
 const DataInformation = tw.ul``;
 
@@ -29,9 +34,55 @@ export interface CyclistData {
 const ScatterplotGraph = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<CyclistData | null>(null);
+  const [data, setData] = useState<CyclistData[] | null>(null);
 
   const svgRef = useRef(null);
+
+  const createScatterplot = (chartData: CyclistData[]) => {
+    const height = 400;
+    const width = 800;
+    const margin = 60;
+
+    const dataset = chartData;
+    const dateDataSet = dataset.map((d) => new Date(`${d.Year}-1`));
+    const timeDataSetSeconds = dataset.map((d) => d.Seconds);
+    const timeDataSetMinutes = dataset.map((d) => new Date(`01-01-1970 00:${d.Time}`));
+
+    const minDate = d3.min(dateDataSet) as Date;
+    const maxDate = d3.max(dateDataSet) as Date;
+    // const minTimeSeconds = d3.min(timeDataSetSeconds);
+    // const maxTimeSeconds = d3.max(timeDataSetSeconds);
+    const minTimeMinutes = d3.min(timeDataSetMinutes) as Date;
+    const maxTimeMinutes = d3.max(timeDataSetMinutes) as Date;
+
+    const xScale = d3.scaleTime().domain([minDate, maxDate]).range([0, width]);
+    const yScale = d3.scaleTime().domain([minTimeMinutes, maxTimeMinutes]).range([height, 0]);
+    const scaleTime = d3.scaleTime().domain([minTimeMinutes, maxTimeMinutes]).range([0, height]);
+
+    // svg
+    d3.select(svgRef.current).attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`);
+
+    // axes scales
+    d3.select('#x-axis')
+      .call(d3.axisBottom(xScale) as any)
+      .attr('transform', `translate(${margin}, ${height + margin})`);
+    d3.select('#y-axis')
+      .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat('%M:%S') as any) as any)
+      .attr('transform', `translate(${margin}, ${margin})`);
+
+    // y-axis label
+    d3.select('.y-axis-label');
+
+    // dots
+    d3.select('.plot-area')
+      .selectAll('.dot')
+      .data(dateDataSet.map((d) => scaleTime(d)))
+      .join('circle')
+      .attr('class', 'dot')
+      .attr('r', 4)
+      .attr('cx', (d, i) => xScale(dateDataSet[i]) + margin)
+      .attr('cy', (d, i) => yScale(timeDataSetMinutes[i]) + margin);
+  };
 
   // fetch data from freeCodeCamp onMount
   useEffect(() => {
@@ -46,7 +97,7 @@ const ScatterplotGraph = () => {
     // getData();
 
     const tempData = () => {
-      setData(fakeData as unknown as CyclistData);
+      setData(fakeData as unknown as CyclistData[]);
       setLoading(false);
       setError(null);
     };
@@ -60,6 +111,10 @@ const ScatterplotGraph = () => {
     // console.log(error);
   }, [data, loading, error]);
 
+  useEffect(() => {
+    data && createScatterplot(data);
+  }, [data]);
+
   return (
     <ScatterplotGraphPageContainer>
       {loading && <h1>Loading Data...</h1>}
@@ -71,7 +126,7 @@ const ScatterplotGraph = () => {
           </h1>
 
           <ScatterplotGraphContainer>
-            <D3ScatterplotGraph ref={svgRef}>
+            <D3ScatterplotGraph ref={svgRef} preserveAspectRatio="xMinYMin meet">
               <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
                 {/* <tspan>Gross Domestic Product</tspan>
                 <tspan x="45" dy="1.2em">
@@ -81,6 +136,7 @@ const ScatterplotGraph = () => {
               <g className="plot-area" />
               <g id="x-axis" />
               <g id="y-axis" />
+              <g id="legend" />
             </D3ScatterplotGraph>
             <D3ScatterplotGraphToolTip id="tooltip" />
           </ScatterplotGraphContainer>
@@ -101,7 +157,7 @@ const ScatterplotGraph = () => {
               <i>
                 <a
                   tw="text-linkcolor hover:text-cyan-400"
-                  href="https://fred.stlouisfed.org/data/GDP.txt"
+                  href="#"
                   target="_blank"
                   rel="noreferrer"
                 >
