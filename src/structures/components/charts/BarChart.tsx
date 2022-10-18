@@ -14,7 +14,7 @@ const D3BarChart = styled.svg`
   height: 100%;
   width: 100%;
   & rect {
-    ${tw`fill-amber-600 hover:fill-blue-900`}
+    ${tw`fill-amber-600 hover:fill-cyan-400`}
   }
 `;
 const D3BarChartToolTip = tw.div`
@@ -75,26 +75,25 @@ const BarChart = () => {
     const yScale = d3.scaleLinear().domain([0, maxGDP]).range([height, 0]);
     const scaleGDP = d3.scaleLinear().domain([0, maxGDP]).range([0, height]);
 
-    const svg = d3.select(svgRef.current);
+    // svg | using a ref as a test, not sure if there is a real difference performance wise
+    d3.select(svgRef.current).attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`);
 
     // axes scales
-    svg
-      .select('#x-axis')
+    d3.select('#x-axis')
       .call(d3.axisBottom(xScale) as any)
       .attr('transform', `translate(${margin}, ${height + margin})`);
-    svg
-      .select('#y-axis')
+    d3.select('#y-axis')
       .call(d3.axisLeft(yScale) as any)
       .attr('transform', `translate(${margin}, ${margin})`);
 
     // y-axis label
-    svg
-      .select('.y-axis-label')
-      .attr('transform', `translate(${margin + 20}, ${height / 2 + 40}) rotate(-90)`);
+    d3.select('.y-axis-label').attr(
+      'transform',
+      `translate(${margin + 20}, ${height / 2 + 40}) rotate(-90)`,
+    );
 
     // bars
-    svg
-      .select('.plot-area')
+    d3.select('.plot-area')
       .selectAll('.bar')
       .data(gdpDataSet.map((d) => scaleGDP(d)))
       .join('rect')
@@ -109,8 +108,7 @@ const BarChart = () => {
 
     const tooltip = d3.select('#tooltip');
 
-    svg
-      .selectAll('.bar')
+    d3.selectAll('.bar')
       .on('mouseover', () => tooltip.style('opacity', 1))
       .on('mousemove', (e) => {
         const tooltipElement = tooltip.node() as Element;
@@ -133,27 +131,6 @@ const BarChart = () => {
           .style('top', `${e.pageY - mouseYOffset}px`);
       })
       .on('mouseleave', () => tooltip.style('opacity', 0));
-
-    return (
-      <BarChartContainer>
-        <D3BarChart
-          ref={svgRef}
-          viewBox={`0 0 ${width + margin * 2} ${height + margin * 2}`}
-          preserveAspectRatio="xMinYMin meet"
-        >
-          <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
-            <tspan>Gross Domestic Product</tspan>
-            <tspan x="45" dy="1.2em">
-              (In Billions)
-            </tspan>
-          </text>
-          <g className="plot-area" />
-          <g id="x-axis" />
-          <g id="y-axis" />
-        </D3BarChart>
-        <D3BarChartToolTip id="tooltip" />
-      </BarChartContainer>
-    );
   };
 
   // fetch data from freeCodeCamp onMount
@@ -176,6 +153,7 @@ const BarChart = () => {
     tempData();
   }, []);
 
+  // add data to bar chart svg
   useEffect(() => {
     data && createBarChart(data);
   }, [data]);
@@ -191,7 +169,22 @@ const BarChart = () => {
             {` (${String(d3.min(data.data.map((d) => d[0]))).slice(0, 4)} - `}
             {`${String(d3.max(data.data.map((d) => d[0]))).slice(0, 4)})`}
           </h1>
-          {createBarChart(data)}
+
+          <BarChartContainer>
+            <D3BarChart ref={svgRef} preserveAspectRatio="xMinYMin meet">
+              <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
+                <tspan>Gross Domestic Product</tspan>
+                <tspan x="45" dy="1.2em">
+                  (In Billions)
+                </tspan>
+              </text>
+              <g className="plot-area" />
+              <g id="x-axis" />
+              <g id="y-axis" />
+            </D3BarChart>
+            <D3BarChartToolTip id="tooltip" />
+          </BarChartContainer>
+
           <DataInformation>
             <li key="0">
               Updated:
