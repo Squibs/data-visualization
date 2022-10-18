@@ -40,6 +40,7 @@ const StyledFooter = styled.footer`
   margin: auto;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #2c2c2c;
 
   & a {
     text-decoration: none;
@@ -61,7 +62,7 @@ const IndexPage = () => {
 
   return (
     <PageContainer>
-      <div>
+      <div style={{ backgroundColor: '#2c2c2c' }}>
         <PageTitle>Data Visualization</PageTitle>
         {useMediaQuery(`screen and (max-width: 639px)`) ? (
           <ProjectDisplayControls>
