@@ -44,20 +44,33 @@ const ScatterplotGraph = () => {
     const margin = 60;
 
     const dataset = chartData;
-    const dateDataSet = dataset.map((d) => new Date(`${d.Year}-1`));
-    const timeDataSetSeconds = dataset.map((d) => d.Seconds);
+    const dateDataSet = dataset.map((d) => new Date(`${d.Year}-1-1`));
     const timeDataSetMinutes = dataset.map((d) => new Date(`01-01-1970 00:${d.Time}`));
 
+    // x-axis min and max dates stored as date objects (converted to date object in datasets)
     const minDate = d3.min(dateDataSet) as Date;
     const maxDate = d3.max(dateDataSet) as Date;
-    // const minTimeSeconds = d3.min(timeDataSetSeconds);
-    // const maxTimeSeconds = d3.max(timeDataSetSeconds);
-    const minTimeMinutes = d3.min(timeDataSetMinutes) as Date;
-    const maxTimeMinutes = d3.max(timeDataSetMinutes) as Date;
 
-    const xScale = d3.scaleTime().domain([minDate, maxDate]).range([0, width]);
-    const yScale = d3.scaleTime().domain([minTimeMinutes, maxTimeMinutes]).range([height, 0]);
-    const scaleTime = d3.scaleTime().domain([minTimeMinutes, maxTimeMinutes]).range([0, height]);
+    // used on x-axis to better fit the data in a larger scale
+    const adjustedMinDate = new Date(minDate);
+    adjustedMinDate.setFullYear(minDate.getFullYear() - 1);
+    const adjustedMaxDate = new Date(maxDate);
+    adjustedMaxDate.setFullYear(maxDate.getFullYear() + 1);
+
+    // y-axis min and max time stored as date objects (converted to date object in datasets)
+    const minTime = d3.min(timeDataSetMinutes) as Date;
+    const maxTime = d3.max(timeDataSetMinutes) as Date;
+
+    // used on y-axis to better fit the data in a larger scale
+    const adjustedMinTime = new Date(minTime);
+    adjustedMinTime.setSeconds(minTime.getSeconds() - 15);
+    const adjustedMaxTime = new Date(maxTime);
+    adjustedMaxTime.setSeconds(maxTime.getSeconds() + 10);
+
+    // scales
+    const xScale = d3.scaleTime().domain([adjustedMinDate, adjustedMaxDate]).range([0, width]);
+    const yScale = d3.scaleTime().domain([adjustedMinTime, adjustedMaxTime]).range([height, 0]);
+    const scaleTime = d3.scaleTime().domain([minTime, maxTime]).range([0, height]);
 
     // svg
     d3.select(svgRef.current).attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`);
@@ -76,12 +89,14 @@ const ScatterplotGraph = () => {
     // dots
     d3.select('.plot-area')
       .selectAll('.dot')
-      .data(dateDataSet.map((d) => scaleTime(d)))
+      .data(dateDataSet.map((d, i) => scaleTime(d)))
       .join('circle')
       .attr('class', 'dot')
       .attr('r', 4)
       .attr('cx', (d, i) => xScale(dateDataSet[i]) + margin)
-      .attr('cy', (d, i) => yScale(timeDataSetMinutes[i]) + margin);
+      .attr('data-xvalue', (d, i) => `${dateDataSet[i]}`)
+      .attr('cy', (d, i) => yScale(timeDataSetMinutes[i]) + margin)
+      .attr('data-yvalue', (d, i) => `${timeDataSetMinutes[i]}`);
   };
 
   // fetch data from freeCodeCamp onMount
