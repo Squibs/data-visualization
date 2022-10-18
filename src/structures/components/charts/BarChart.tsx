@@ -106,8 +106,8 @@ const BarChart = () => {
       .attr('data-date', (d, i) => `${dateDataSet[i]}`)
       .attr('data-gdp', (d, i) => `${gdpDataSet[i]}`);
 
+    // tooltip mouse events
     const tooltip = d3.select('#tooltip');
-
     d3.selectAll('.bar')
       .on('mouseover', () => tooltip.style('opacity', 1))
       .on('mousemove', (e) => {
