@@ -50,7 +50,7 @@ const StyledFooter = styled.footer`
 /* -------------------------------- component ------------------------------- */
 
 const IndexPage = () => {
-  const [currentGraph, setCurrentGraph] = useState<ReactNode>(HomePage);
+  const [currentGraph, setCurrentGraph] = useState<ReactNode>(<HomePage />);
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
 
   // used to get current graph from dropdown
