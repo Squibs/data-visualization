@@ -30,7 +30,7 @@ const StyledNav = styled.nav<IsLargeScreenProp>`
 `;
 
 // mobile dropdown
-const NavButton = tw.button`bg-gray-300 text-gray-700 font-semibold py-2 px-3 rounded inline-flex items-center mr-0.5`;
+const NavButton = tw.button`bg-gray-300 text-gray-700 py-2 px-3 rounded inline-flex items-center mr-0.5`;
 const NavChevron = tw.svg`fill-current h-4 w-4`;
 
 // list of nav items / charts <ul>
@@ -44,11 +44,7 @@ const NavListContainer = styled.ul<IsLargeScreenProp>`
 // <li><button></li>
 const NavLinkContainer = tw.li`lg:(mx-2)`;
 const NavLink = styled.button<NavLinkProps>`
-  /* when the css has more logic than anything else */
-  /* rounded corners on top and bottom */
-  ${({ firstOrLast }) =>
-    ['0', '5'].includes(firstOrLast) && firstOrLast === '0' ? tw`rounded-t` : tw`rounded-b`}
-  ${tw`py-2 px-4 block whitespace-nowrap w-full [text-align: left] bg-gray-200 hover:(bg-gray-400) focus:(bg-gray-400)`}
+  ${tw`py-2 px-3 block whitespace-nowrap w-full [text-align: left] bg-gray-300 hover:(bg-gray-400) focus:(bg-gray-400)`}
 
   /* if the element is for large screens */
   ${({ isLargeScreen }) => isLargeScreen && tw`text-center rounded-none`}
