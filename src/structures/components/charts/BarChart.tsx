@@ -143,13 +143,14 @@ const BarChart = () => {
         setData,
       );
 
+    // getData();
+
     const tempData = () => {
       setData(fakeData as unknown as USGDPData);
       setLoading(false);
       setError(null);
     };
 
-    // getData();
     tempData();
   }, []);
 
@@ -162,7 +163,7 @@ const BarChart = () => {
     <BarChartPageContainer>
       {loading && <h1>Loading Data...</h1>}
       {error && <div>{`There was a problem fetching the data - ${error}`}</div>}
-      {data && !loading && (
+      {data && !loading && !error && (
         <>
           <h1 id="title" tw="text-center text-2xl font-medium">
             United States GDP
