@@ -45,6 +45,7 @@ const ScatterplotGraph = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<CyclistData[] | null>(null);
+  const [sources, setSources] = useState<JSX.Element[] | null>(null);
 
   const svgRef = useRef(null);
 
@@ -143,6 +144,35 @@ const ScatterplotGraph = () => {
       .on('mouseleave', () => tooltip.style('opacity', 0));
   };
 
+  // creates list of sources from data
+  const createSources = (chartData: CyclistData[]) => {
+    const listOfSources: Array<(string | number)[]> = [];
+
+    chartData.forEach((d) => {
+      if (d.URL && !listOfSources.some((s) => s[1] === d.URL)) {
+        listOfSources.push([d.Place - 1, d.URL]);
+      }
+    });
+
+    setSources(
+      listOfSources.map((s) => (
+        <React.Fragment key={Math.random()}>
+          <a
+            tw="text-linkcolor hover:text-cyan-400"
+            href={s[1] as string}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {chartData[s[0] as number].Name}
+            {'\u00A0'}
+            Allegation
+          </a>
+          <br />
+        </React.Fragment>
+      )),
+    );
+  };
+
   // fetch data from freeCodeCamp onMount
   useEffect(() => {
     const getData = () =>
@@ -167,6 +197,7 @@ const ScatterplotGraph = () => {
   // add data to bar chart svg
   useEffect(() => {
     data && createScatterplot(data);
+    data && createSources(data);
   }, [data]);
 
   return (
@@ -215,17 +246,11 @@ const ScatterplotGraph = () => {
               </i>
             </li>
             <li key="1">
-              Data:
-              {'\u00A0'}
               <i>
-                <a
-                  tw="text-linkcolor hover:text-cyan-400"
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Sources
-                </a>
+                <details>
+                  <summary>Sources</summary>
+                  {sources}
+                </details>
               </i>
             </li>
           </DataInformation>
