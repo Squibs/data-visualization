@@ -45,8 +45,8 @@ const SmileyFace = ({ styles, random }: SmileyFaceProps) => {
       .arc()
       .innerRadius(mouthRadius)
       .outerRadius(mouthRadius + mouthStroke)
-      .startAngle(Math.PI / 2)
-      .endAngle((Math.PI * 3) / 2);
+      .startAngle(Math.PI / (random ? 1.3 + Math.random() : 2))
+      .endAngle((Math.PI * (random ? 1.85 + Math.random() * 1.15 : 3)) / 2);
 
     const randomColors = [
       '#94a3b8',
@@ -100,7 +100,11 @@ const SmileyFace = ({ styles, random }: SmileyFaceProps) => {
 
     d3.select(faceMouthRef.current)
       .attr('d', mouthArc(null as unknown as d3.DefaultArcObject))
-      .attr('transform', `translate(0, ${mouthOffset})`);
+      .attr(
+        'transform',
+        // eslint-disable-next-line no-nested-ternary
+        `translate(0, ${mouthOffset}) ${random ? (Math.random() > 0.5 ? 'scale(-1,1)' : '') : ''}`,
+      );
   }, [random]);
 
   useEffect(() => {
