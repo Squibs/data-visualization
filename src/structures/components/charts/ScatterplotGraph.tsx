@@ -13,7 +13,17 @@ const D3ScatterplotGraph = styled.svg`
   height: 100%;
   width: 100%;
 `;
-const D3ScatterplotGraphToolTip = tw.div``;
+const D3ScatterplotGraphToolTip = styled.div`
+  ${tw`opacity-0 absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
+  pointer-events-none border-2 border-solid rounded-md border-black [line-height: 1em]`}
+
+  & hr {
+    border-color: #2c2c2c49;
+    width: 75%;
+    margin: auto;
+    ${tw`mt-1 mb-1`}
+  }
+`;
 const DataInformation = tw.ul``;
 
 /* ---------------------------------- types --------------------------------- */
@@ -84,7 +94,13 @@ const ScatterplotGraph = () => {
       .attr('transform', `translate(${margin}, ${margin})`);
 
     // y-axis label
-    d3.select('.y-axis-label');
+    d3.select('.y-axis-label').attr(
+      'transform',
+      `translate(${margin + 20}, ${height / 2 + 20}) rotate(-90)`,
+    );
+
+    // legend
+    d3.select('#legend').attr('transform', `translate(${width - margin * 3}, ${height - margin})`);
 
     // dots
     d3.select('.plot-area')
@@ -92,11 +108,39 @@ const ScatterplotGraph = () => {
       .data(dateDataSet.map((d, i) => scaleTime(d)))
       .join('circle')
       .attr('class', 'dot')
-      .attr('r', 4)
+      .attr('r', 7)
       .attr('cx', (d, i) => xScale(dateDataSet[i]) + margin)
       .attr('data-xvalue', (d, i) => `${dateDataSet[i]}`)
       .attr('cy', (d, i) => yScale(timeDataSetMinutes[i]) + margin)
-      .attr('data-yvalue', (d, i) => `${timeDataSetMinutes[i]}`);
+      .attr('data-yvalue', (d, i) => `${timeDataSetMinutes[i]}`)
+      .attr('data-index', (d, i) => i)
+      .attr('fill', (d, i) => `${dataset[i].Doping ? '#d97706BF' : '#22d3eeBF'}`)
+      .attr('stroke', () => 'black');
+
+    // tooltip mouse events
+    const tooltip = d3.select('#tooltip');
+    d3.selectAll('.dot')
+      .on('mouseover', () => tooltip.style('opacity', 1))
+      .on('mousemove', (e) => {
+        const tooltipElement = tooltip.node() as Element;
+        const mouseXOffset = tooltipElement.getBoundingClientRect().width / 2;
+        const mouseYOffset = tooltipElement.getBoundingClientRect().height + 10;
+        const ld = e.target.dataset; // local dataset
+
+        tooltip
+          .html(
+            `<small>
+              ${dataset[ld.index].Name} (${dataset[ld.index].Nationality})<br>
+              ${dataset[ld.index].Year}, ${dataset[ld.index].Time}<br>
+              ${dataset[ld.index].Doping ? '<hr>' : ''}
+              ${dataset[ld.index].Doping}
+            </small>`,
+          )
+          .attr('data-year', ld.xvalue)
+          .style('left', `${e.pageX - mouseXOffset}px`)
+          .style('top', `${e.pageY - mouseYOffset}px`);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
   };
 
   // fetch data from freeCodeCamp onMount
@@ -120,12 +164,7 @@ const ScatterplotGraph = () => {
     tempData();
   }, []);
 
-  useEffect(() => {
-    // console.log(data);
-    // console.log(loading);
-    // console.log(error);
-  }, [data, loading, error]);
-
+  // add data to bar chart svg
   useEffect(() => {
     data && createScatterplot(data);
   }, [data]);
@@ -137,21 +176,30 @@ const ScatterplotGraph = () => {
       {data && !loading && !error && (
         <>
           <h1 id="title" tw="text-center text-2xl font-medium">
-            TITLE OF MY CHART
+            Doping Allegations in Professional Bicycling
           </h1>
+          <h2 tw="text-center text-xl font-light">35 Fastest times up Alpe d&apos;Huez</h2>
 
           <ScatterplotGraphContainer>
             <D3ScatterplotGraph ref={svgRef} preserveAspectRatio="xMinYMin meet">
               <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
-                {/* <tspan>Gross Domestic Product</tspan>
-                <tspan x="45" dy="1.2em">
-                  (In Billions)
-                </tspan> */}
+                <tspan>Time in Minutes</tspan>
               </text>
               <g className="plot-area" />
               <g id="x-axis" />
               <g id="y-axis" />
-              <g id="legend" />
+              <g id="legend" style={{ fill: '#9d9d9d' }}>
+                <g className="legend-label">
+                  <text>Doping Allegations Cited</text>
+                  <rect x="185" y="-15" width="20" height="20" fill="#d97706BF" stroke="black" />
+                </g>
+                <g className="legend-label">
+                  <text x="15" dy="1.81em">
+                    No Doping Allegations
+                  </text>
+                  <rect x="185" y="15" width="20" height="20" fill="#22d3eeBF" stroke="black" />
+                </g>
+              </g>
             </D3ScatterplotGraph>
             <D3ScatterplotGraphToolTip id="tooltip" />
           </ScatterplotGraphContainer>
