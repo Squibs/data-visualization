@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import * as d3 from 'd3';
+import { SmileyFace } from './charts';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -36,6 +38,15 @@ const HomePage = () => {
         repositories via fetch requests. The data is then processed through the use of D3 to provide
         a visualization of the data.
       </p>
+      <div tw="flex flex-wrap justify-between mt-10">
+        {d3.range(28).map(() => (
+          <SmileyFace
+            key={Math.random()}
+            styles={{ width: '14.28%', marginBottom: '2.5rem' }}
+            random
+          />
+        ))}
+      </div>
     </HomePageContainer>
   );
 };
