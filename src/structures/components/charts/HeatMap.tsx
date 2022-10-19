@@ -7,10 +7,26 @@ import fakeData from '../../../data/data-backup-heat-map-(Global Temperature).js
 
 /* --------------------------------- styles --------------------------------- */
 
-const HeatMapPageContainer = tw.div``;
-const HeatMapContainer = tw.div``;
-const D3HeatMap = tw.svg``;
-const D3HeatMapToolTip = tw.div``;
+const HeatMapPageContainer = styled.div`
+  ${tw`w-full`}
+
+  .cell:hover {
+    fill: #29c929;
+  }
+`;
+const HeatMapContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
+const D3HeatMap = tw.svg`w-full h-full`;
+const D3HeatMapToolTip = styled.div`
+  ${tw`[display: none] absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
+  pointer-events-none border-2 border-solid rounded-md border-black [line-height: 1em]`}
+
+  & hr {
+    border-color: #2c2c2c49;
+    width: 75%;
+    margin: auto;
+    ${tw`mt-1 mb-1`}
+  }
+`;
 const DataInformation = tw.ul``;
 
 /* ---------------------------------- types --------------------------------- */
@@ -92,7 +108,7 @@ const HeatMap = () => {
         d3
           .axisBottom(legendScaleX)
           .tickValues(varianceScaleBreakpoints)
-          .tickFormat((d, i) => (typeof d === 'string' ? d : `${d3.format('.1f')(d)}°C`)) as any,
+          .tickFormat((d, i) => (typeof d === 'string' ? d : `${d3.format('.1f')(d)}℃`)) as any,
       );
 
     // array of ranges in which each data point should fall between one of
@@ -135,7 +151,7 @@ const HeatMap = () => {
 
     // y-axis scale
     d3.select('#y-axis')
-      .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat('%b') as any) as any)
+      .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat('%B') as any) as any)
       .attr('transform', `translate(${margin}, ${margin / 1.5})`); // adjusts y-axis upwards a bit so ticks can be in center
 
     // bars (cells)
@@ -146,14 +162,45 @@ const HeatMap = () => {
       .attr('class', 'cell')
       .attr('x', (d, i) => xScale(yearDataSet[i]) + margin)
       .attr('width', 4)
-      .attr('data-year', (d, i) => `${yearDataSet[i]}`)
-      .attr('y', (d, i) => yScale(monthDataSet[i]) + margin / 3) // moves entire graph up a bit to align with y-axis that is also adjusted upwards
-      .attr('height', 40)
-      .attr('data-month', (d, i) => `${monthDataSet[i]}`)
+      .attr('data-year', (d, i) => `${dataset.monthlyVariance[i].year}`)
+      .attr('y', (d, i) => yScale(monthDataSet[i]) + margin / 2.65) // moves entire graph up a bit to align with y-axis that is also adjusted upwards
+      .attr('height', 38)
+      // for fCC tests, -1 because I guess they wanted 0 based month, which the data isn't even based on
+      // and they don't want a date object either, which is what I would actually use for tooltips
+      .attr('data-month', (d, i) => `${dataset.monthlyVariance[i].month - 1}`)
       .attr('fill', (d, i) => {
         return varianceScale(dataset.baseTemperature + dataset.monthlyVariance[i].variance);
       })
-      .attr('data-temp', (d, i) => dataset.baseTemperature + dataset.monthlyVariance[i].variance);
+      .attr('data-temp', (d, i) => dataset.baseTemperature + dataset.monthlyVariance[i].variance)
+      .attr('data-variance', (d, i) => dataset.monthlyVariance[i].variance);
+
+    // ------------------------tooltip--------------------------
+    const tooltip = d3.select('#tooltip');
+    d3.selectAll('.cell')
+      .on('mouseover', (e) => {
+        tooltip.style('display', 'block');
+      })
+      .on('mousemove', (e) => {
+        const tooltipElement = tooltip.node() as Element;
+        const mouseXOffset = tooltipElement.getBoundingClientRect().width / 2;
+        const mouseYOffset = tooltipElement.getBoundingClientRect().height + 10;
+        const ld = e.target.dataset; // local dataset
+        let month = new Date() as any;
+        month.setMonth(ld.month);
+        month = month.toLocaleString('en-US', { month: 'long' }) as string;
+
+        tooltip
+          .html(
+            `<small>
+              ${ld.year} - ${month} - ${Number(ld.temp).toFixed(1)}℃<br>
+              Variance of ${Number(ld.variance).toFixed(1)}℃
+            </small>`,
+          )
+          .attr('data-year', ld.year)
+          .style('left', `${e.pageX - mouseXOffset}px`)
+          .style('top', `${e.pageY - mouseYOffset}px`);
+      })
+      .on('mouseleave', () => tooltip.style('display', 'none'));
   };
 
   // fetch data from freeCodeCamp onMount
@@ -189,8 +236,14 @@ const HeatMap = () => {
       {data && !loading && !error && (
         <>
           <h1 id="title" tw="text-center text-2xl font-medium">
-            CHART TITLE GOES HERE
+            Global Land-Surface Temperatures
           </h1>
+          <h2 id="description" tw="text-center text-xl font-light">
+            {`(${d3.min(data.monthlyVariance.map((d) => d.year))} -
+            ${d3.max(data.monthlyVariance.map((d) => d.year))}) `}
+            Base temperature of:
+            {` ${data.baseTemperature.toFixed(2)}℃`}
+          </h2>
 
           <HeatMapContainer>
             <D3HeatMap ref={svgRef} preserveAspectRatio="xMinYMin meet">
@@ -217,10 +270,16 @@ const HeatMap = () => {
             </li>
             <li key="1">
               <i>
-                <details>
-                  <summary>Sources</summary>
-                  <p>temp words placeholder text</p>
-                </details>
+                Data:
+                <a
+                  href="http://berkeleyearth.org/data/"
+                  tw="text-linkcolor hover:text-cyan-400"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {'\u00A0'}
+                  Source
+                </a>
               </i>
             </li>
           </DataInformation>
