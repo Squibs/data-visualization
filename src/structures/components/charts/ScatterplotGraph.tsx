@@ -214,7 +214,7 @@ const ScatterplotGraph = () => {
           <ScatterplotGraphContainer>
             <D3ScatterplotGraph ref={svgRef} preserveAspectRatio="xMinYMin meet">
               <text className="y-axis-label" style={{ fill: '#9d9d9d' }}>
-                <tspan>Time in Minutes</tspan>
+                <tspan>Time (in Minutes)</tspan>
               </text>
               <g className="plot-area" />
               <g id="x-axis" />
