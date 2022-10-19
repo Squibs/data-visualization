@@ -31,7 +31,7 @@ const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;
 const ProjectContainer = tw.div`max-w-screen-xl m-auto p-5 pb-0`;
 
 const StyledFooter = styled.footer`
-  ${tw`text-center pb-5`}
+  ${tw`text-center pb-2`}
 
   flex-shrink: 0;
   font-family: 'Righteous', cursive;
