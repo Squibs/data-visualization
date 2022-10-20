@@ -167,9 +167,12 @@ const BarChart = () => {
         <>
           <h1 id="title" tw="text-center text-2xl font-medium">
             United States GDP
-            {` (${String(d3.min(data.data.map((d) => d[0]))).slice(0, 4)} - `}
-            {`${String(d3.max(data.data.map((d) => d[0]))).slice(0, 4)})`}
           </h1>
+          <h2 id="description" tw="text-center text-xl font-light">
+            {`${String(d3.min(data.data.map((d) => d[0]))).slice(0, 4)} - `}
+            {`${String(d3.max(data.data.map((d) => d[0]))).slice(0, 4)} `}
+            (In Billions)
+          </h2>
 
           <BarChartContainer>
             <D3BarChart ref={svgRef} preserveAspectRatio="xMinYMin meet">
