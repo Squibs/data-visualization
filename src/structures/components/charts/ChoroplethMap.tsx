@@ -118,6 +118,7 @@ const ChoroplethMap = () => {
     // ------------------------us map-----------------------------
 
     // adjust map size so it's not a fixed size of 960 x 600
+    // https://stackoverflow.com/questions/69470766/how-to-center-and-scale-using-geopath
     const geojson = topojson.feature(cData, cData.objects.counties);
     const projection = d3.geoIdentity().fitSize([width + margin * 2, height + margin * 2], geojson);
     const path = d3.geoPath();
