@@ -56,10 +56,12 @@ const ChoroplethMap = () => {
   const svgRef = useRef(null);
 
   const createChoroplethMap = (cData: any, eData: EducationData[]) => {
+    const height = 400;
+    const width = 800;
     const margin = 60;
 
     // svg - fixed size as that's what this map is pre-projected to fit
-    d3.select(svgRef.current).attr('viewBox', `0 0 960 600`);
+    d3.select(svgRef.current).attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`);
 
     const minEducation = d3.min(eData.map((d) => d.bachelorsOrHigher)) as number;
     const maxEducation = d3.max(eData.map((d) => d.bachelorsOrHigher)) as number;
@@ -111,17 +113,24 @@ const ChoroplethMap = () => {
       .style('fill', (d) => educationColorScale(d[0]));
 
     // move legend position
-    d3.select('#legend').attr('transform', `translate(${625}, ${margin - 20})`);
+    d3.select('#legend').attr('transform', `translate(${600}, ${margin - 37})`);
 
     // ------------------------us map-----------------------------
+
+    // adjust map size so it's not a fixed size of 960 x 600
+    const geojson = topojson.feature(cData, cData.objects.counties);
+    const projection = d3.geoIdentity().fitSize([width + margin * 2, height + margin * 2], geojson);
+    const path = d3.geoPath();
+    path.projection(projection);
+    // @ts-expect-error features does actually exist here
+    const myTopoDataWithAdjustedSize = geojson.features;
 
     // create us map
     d3.select('.plot-area')
       .append('g')
       .attr('class', 'counties')
       .selectAll('path')
-      // @ts-expect-error features does exist here
-      .data(topojson.feature(cData, cData.objects.counties).features as any)
+      .data(myTopoDataWithAdjustedSize)
       .enter()
       .append('path')
       .attr('class', 'county')
@@ -131,7 +140,7 @@ const ChoroplethMap = () => {
         if (result[0]) return educationColorScale(result[0].bachelorsOrHigher);
         return educationColorScale(0); // no matching fips to id in the data so default 0%
       })
-      .attr('d', d3.geoPath() as any)
+      .attr('d', path as any)
       .attr('data-fips', (d: any) => d.id)
       .attr('data-education', (d: any) => {
         const result = eData.filter((obj) => obj.fips === d.id);
@@ -147,7 +156,7 @@ const ChoroplethMap = () => {
       .append('path')
       .attr('class', 'states')
       .datum(topojson.mesh(cData, cData.objects.states, (a, b) => a !== b))
-      .attr('d', d3.geoPath());
+      .attr('d', path); // uses same adjusted d3.geoPath() as the counties
 
     // ------------------------tooltip---------------------------
     const tooltip = d3.select('#tooltip');
