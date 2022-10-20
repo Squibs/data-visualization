@@ -12,6 +12,7 @@ const HeatMapPageContainer = styled.div`
 
   .cell:hover {
     fill: #29c929;
+    ${tw`fill-cyan-400`}
   }
 `;
 const HeatMapContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
@@ -92,7 +93,7 @@ const HeatMap = () => {
     const varianceScale = d3
       .scaleThreshold()
       .domain(varianceScaleBreakpoints)
-      .range([...d3.schemeRdBu[10]].reverse() as any);
+      .range([...d3.schemeOranges[9], '#4c1702'] as any);
 
     // axis scale
     const legendScaleX = d3
@@ -108,7 +109,7 @@ const HeatMap = () => {
         d3
           .axisBottom(legendScaleX)
           .tickValues(varianceScaleBreakpoints)
-          .tickFormat((d, i) => (typeof d === 'string' ? d : `${d3.format('.1f')(d)}℃`)) as any,
+          .tickFormat((d) => (typeof d === 'string' ? d : `${d3.format('.1f')(d)}℃`)) as any,
       );
 
     // array of ranges in which each data point should fall between one of
@@ -177,7 +178,7 @@ const HeatMap = () => {
     // ------------------------tooltip--------------------------
     const tooltip = d3.select('#tooltip');
     d3.selectAll('.cell')
-      .on('mouseover', (e) => {
+      .on('mouseover', () => {
         tooltip.style('display', 'block');
       })
       .on('mousemove', (e) => {
