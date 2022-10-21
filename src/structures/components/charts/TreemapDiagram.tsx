@@ -3,6 +3,7 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import twColors from 'tailwindcss/colors';
 import { getDataFromAPI } from '../../utils';
 
 import fakeVideoGameData from '../../../data/data-backup-treemap-diagram-(Video Game Sales).json';
@@ -22,9 +23,25 @@ const TreemapDiagramPageContainer = styled.div`
   .county:hover {
     ${tw`fill-cyan-400`}
   }
+
+  .active {
+    background-color: ${twColors.gray[400]}; // bg-gray-400
+  }
 `;
-const TreemapGraphSelector = tw.div``;
-const TreemapDiagramContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
+
+const TreemapGraphSelector = styled.div`
+  ${tw`mb-3 mt-3 grid xs:(grid-cols-3) sm:(flex justify-center)`}
+
+  & button {
+    ${tw`bg-gray-300 text-gray-700 py-2 px-1 mb-2 sm:(max-w-fit px-5)`}
+  }
+
+  & button:not(:last-child) {
+    ${tw`xs:mr-0.5 sm:mr-5`}
+  }
+`;
+
+const TreemapDiagramContainer = tw.div`w-full h-auto max-w-xl m-auto`;
 const D3TreemapDiagram = tw.svg`w-full h-full`;
 const D3TreemapDiagramToolTip = styled.div`
   ${tw`[display: none] absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
@@ -75,10 +92,7 @@ const TreemapDiagram = () => {
 
   const createTreemapDiagram = (data: DataFormat) => {};
 
-  const handleGraphSwitch = (switchTo: string) => {
-    setSelectedGraph(switchTo);
-  };
-
+  // reused for each graph creation.
   const graphAndDataHelper = useCallback(() => {
     if (currentData) {
       setLoading(false);
@@ -159,13 +173,25 @@ const TreemapDiagram = () => {
   return (
     <TreemapDiagramPageContainer>
       <TreemapGraphSelector>
-        <button type="button" onClick={() => handleGraphSwitch('videogame')}>
+        <button
+          type="button"
+          className={selectedGraph === 'videogame' ? 'active' : ''}
+          onClick={() => setSelectedGraph('videogame')}
+        >
           Video Game Data
         </button>
-        <button type="button" onClick={() => handleGraphSwitch('kickstarter')}>
+        <button
+          type="button"
+          className={selectedGraph === 'kickstarter' ? 'active' : ''}
+          onClick={() => setSelectedGraph('kickstarter')}
+        >
           Kickstarter Data
         </button>
-        <button type="button" onClick={() => handleGraphSwitch('movie')}>
+        <button
+          type="button"
+          className={selectedGraph === 'movie' ? 'active' : ''}
+          onClick={() => setSelectedGraph('movie')}
+        >
           Movie Data
         </button>
       </TreemapGraphSelector>
