@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useLayoutEffect, useState } from 'react';
 import { navigate } from 'gatsby';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
@@ -96,23 +96,22 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
 
   const onPageLoad = useCallback(() => {
     const locationAndData = getLocationAndDataFromURL();
-    let location = locationAndData[0] as string;
-    const data = locationAndData[1];
+    const location = locationAndData[0] as string;
 
-    // remove all but the url. Default to index if bad url
+    // remove all but the base url
+    let updatedLocation: string | null = null;
     const availableURLs = graphArray.map((u) => u[2]).slice(1);
-    availableURLs.forEach((u, i) => {
-      if (location.includes(u)) location = u;
-      if (i >= availableURLs.length - 1 && !location.includes(u)) location = '/?';
+    availableURLs.forEach((u) => {
+      if (location.includes(u)) updatedLocation = u;
     });
 
-    setActiveURL(location);
+    setActiveURL(updatedLocation || '/?');
 
-    const currentGraph = graphArray.find((graph) => graph[2] === `${location}`);
+    const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation || '/?'}`);
     currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1]);
   }, [updateCurrentGraph]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onPageLoad();
   }, [onPageLoad]);
 
