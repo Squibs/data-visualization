@@ -80,7 +80,7 @@ const TreemapDiagram = () => {
   const [kickstarterData, setKickStarterData] = useState<DataFormat | null>(null);
   const [movieData, setMovieData] = useState<DataFormat | null>(null);
 
-  const [selectedGraph, setSelectedGraph] = useState<string>('videogame');
+  const [selectedGraph, setSelectedGraph] = useState<string>('');
   const [currentData, setCurrentData] = useState<DataFormat | null>(null);
 
   const svgRef = useRef(null);
@@ -170,6 +170,19 @@ const TreemapDiagram = () => {
   // if you click on a button, it will do this same process, but for a different graph.
   // or the same graph if you click on the same button. Data is only fetched if there is no data already
   // so a graph in which data failed to get, you can retry to fetch the data.
+
+  // store optional treemap-data parameter on load
+  // seems like this will override my switch defaults of setting selectedGraph to 'videogame'
+  // i am assuming all the setSelectedGraph calls are being batched together and this being the last
+  // overrides them, which is what I want.
+  useEffect(() => {
+    let data: RegExpMatchArray | null | string =
+      window.location.search.match(/&treemap-data=(\w+)/);
+
+    if (data) data = data[1]; // eslint-disable-line prefer-destructuring
+
+    setSelectedGraph(data || 'videogame');
+  }, []);
 
   return (
     <TreemapDiagramPageContainer>
