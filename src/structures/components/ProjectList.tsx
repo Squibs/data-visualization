@@ -75,8 +75,8 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
     if (updatedLocation.endsWith('=')) updatedLocation = updatedLocation.slice(0, -1);
 
     // store only the first data parameter if multiple exist
-    let data: RegExpMatchArray | null | string = updatedLocation.match(/&treemap-data=\w+/);
-    if (data) data = data[0]; // eslint-disable-line prefer-destructuring
+    const queryParams = new URLSearchParams(updatedLocation);
+    const data = `&treemap-data=${queryParams.get('treemap-data')}`;
 
     return [updatedLocation, data || ''];
   };

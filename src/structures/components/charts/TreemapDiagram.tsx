@@ -162,24 +162,10 @@ const TreemapDiagram = () => {
     }
   }, [selectedGraph]);
 
-  // on page load, the default is video game. It will try to fetch the video game data
-  // it will display loading while fetching information. if it fails to fetch the information
-  // display an error, otherwise display the graph. Can retry to get the graph, or switch to the other graphs
-  // by clicking on the buttons. These buttons will switch which graph is displayed.
-
-  // if you click on a button, it will do this same process, but for a different graph.
-  // or the same graph if you click on the same button. Data is only fetched if there is no data already
-  // so a graph in which data failed to get, you can retry to fetch the data.
-
   // store optional treemap-data parameter on load
-  // seems like this will override my switch defaults of setting selectedGraph to 'videogame'
-  // i am assuming all the setSelectedGraph calls are being batched together and this being the last
-  // overrides them, which is what I want.
   useEffect(() => {
-    let data: RegExpMatchArray | null | string =
-      window.location.search.match(/&treemap-data=(\w+)/);
-
-    if (data) data = data[1]; // eslint-disable-line prefer-destructuring
+    const queryParams = new URLSearchParams(window.location.search);
+    const data = queryParams.get('treemap-data');
 
     setSelectedGraph(data || 'videogame');
   }, []);
