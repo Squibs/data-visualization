@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { navigate } from 'gatsby';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
@@ -65,8 +65,8 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
   const [expandNav, setExpandNav] = useState(false);
   const [activeURL, setActiveURL] = useState('/?');
 
-  // get current url to check for active project (/? - home, /?bar-chart - Bar Chart)
-  useEffect(() => {
+  // shared between page load and navigation
+  const getLocationAndDataFromURL = () => {
     const windowLocation = window.location.search;
     let updatedLocation = windowLocation === '' ? '/?' : `/${window.location.search}`;
 
@@ -74,11 +74,47 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
     // probably because i'm doing this all weird and using the usual query/search symbol '?'
     if (updatedLocation.endsWith('=')) updatedLocation = updatedLocation.slice(0, -1);
 
-    setActiveURL(updatedLocation);
+    // store only the first data parameter if multiple exist
+    let data: RegExpMatchArray | null | string = updatedLocation.match(/&treemap-data=\w+/);
+    if (data) data = data[0]; // eslint-disable-line prefer-destructuring
 
-    const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation}`);
+    return [updatedLocation, data || ''];
+  };
+
+  const handleNavigation = (project: React.ReactNode, title: string, url: string) => {
+    const locationAndData = getLocationAndDataFromURL();
+    let location = locationAndData[0];
+    const data = locationAndData[1];
+
+    location = `${url}${data}`;
+
+    setActiveURL(location);
+    navigate(location);
+
+    updateCurrentGraph(project, title);
+  };
+
+  const onPageLoad = useCallback(() => {
+    const locationAndData = getLocationAndDataFromURL();
+    let location = locationAndData[0] as string;
+    const data = locationAndData[1];
+
+    // remove all but the url. Default to index if bad url
+    const availableURLs = graphArray.map((u) => u[2]).slice(1);
+    availableURLs.forEach((u, i) => {
+      if (location.includes(u)) location = u;
+      if (i >= availableURLs.length - 1 && !location.includes(u)) location = '/?';
+    });
+
+    setActiveURL(location);
+
+    const currentGraph = graphArray.find((graph) => graph[2] === `${location}`);
     currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1]);
   }, [updateCurrentGraph]);
+
+  useEffect(() => {
+    onPageLoad();
+  }, [onPageLoad]);
 
   return (
     <StyledNav
@@ -107,10 +143,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
               firstOrLast={index.toString()}
               className={activeURL === url ? 'active' : ''}
               onClick={() => {
-                setActiveURL(url);
-                updateCurrentGraph(project, title);
-                setExpandNav(false);
-                navigate(url);
+                handleNavigation(project, title, url);
               }}
             >
               {title}

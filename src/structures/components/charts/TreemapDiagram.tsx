@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { navigate } from 'gatsby';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
@@ -176,21 +177,30 @@ const TreemapDiagram = () => {
         <button
           type="button"
           className={selectedGraph === 'videogame' ? 'active' : ''}
-          onClick={() => setSelectedGraph('videogame')}
+          onClick={() => {
+            setSelectedGraph('videogame');
+            navigate('?treemap-diagram&treemap-data=videogame');
+          }}
         >
           Video Game Data
         </button>
         <button
           type="button"
           className={selectedGraph === 'kickstarter' ? 'active' : ''}
-          onClick={() => setSelectedGraph('kickstarter')}
+          onClick={() => {
+            setSelectedGraph('kickstarter');
+            navigate('?treemap-diagram&treemap-data=kickstarter');
+          }}
         >
           Kickstarter Data
         </button>
         <button
           type="button"
           className={selectedGraph === 'movie' ? 'active' : ''}
-          onClick={() => setSelectedGraph('movie')}
+          onClick={() => {
+            setSelectedGraph('movie');
+            navigate('?treemap-diagram&treemap-data=movie');
+          }}
         >
           Movie Data
         </button>
