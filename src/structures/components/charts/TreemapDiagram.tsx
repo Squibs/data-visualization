@@ -27,6 +27,10 @@ const TreemapDiagramPageContainer = styled.div`
   .active {
     background-color: ${twColors.gray[400]}; // bg-gray-400
   }
+
+  .otherTile {
+    pointer-events: none;
+  }
 `;
 
 const TreemapGraphSelector = styled.div`
@@ -170,16 +174,14 @@ const TreemapDiagram = () => {
       // foreignObject for each rect text that can wrap
       rectGroup
         .append('foreignObject')
+        .attr('class', 'otherTile')
         .attr('x', (d) => d.x0)
         .attr('y', (d) => d.y0)
         .attr('width', (d) => d.x1 - d.x0)
         .attr('height', (d) => d.y1 - d.y0)
         .append('xhtml:div')
         .text((d: any) => d.data.name)
-        .attr('style', (d) => {
-          console.log(d);
-          return 'color: #000; font-size: 10px; padding: 2px;';
-        });
+        .attr('style', 'color: #000; font-size: 10px; padding: 2px; pointer-events: none;');
 
       // -------------------legend------------------------
       const legendWidth = width + margin * 2;
@@ -228,6 +230,33 @@ const TreemapDiagram = () => {
         .attr('y', legendRectSize + legendTextYOffset)
         .attr('fill', '#9d9d9d');
     }
+
+    // ------------------------tooltip-------------------------
+    const tooltip = d3.select('#tooltip');
+
+    d3.selectAll('.tile')
+      .on('mouseover', () => {
+        tooltip.style('display', 'block');
+      })
+      .on('mousemove', (e) => {
+        const tooltipElement = tooltip.node() as Element;
+        const mouseXOffset = tooltipElement.getBoundingClientRect().width / 2;
+        const mouseYOffset = tooltipElement.getBoundingClientRect().height + 10;
+        const ld = e.target.dataset; // local dataset
+
+        tooltip
+          .html(
+            `<small>
+              Category: ${ld.category}<br>
+              Value: ${ld.value}<br>
+              Name: ${ld.name}
+            </small>`,
+          )
+          .attr('data-value', ld.value)
+          .style('left', `${e.pageX - mouseXOffset}px`)
+          .style('top', `${e.pageY - mouseYOffset}px`);
+      })
+      .on('mouseleave', () => tooltip.style('display', 'none'));
   }, [currentData]);
 
   // once data is retrieved create graph
@@ -375,7 +404,7 @@ const TreemapDiagram = () => {
           <TreemapDiagramContainer>
             <D3TreemapDiagram ref={svgRef} preserveAspectRatio="xMinYMin meet" />
             <D3TreemapDiagramLegend ref={legendRef} preserveAspectRatio="xMinYMin meet" />
-            <D3TreemapDiagramToolTip id="tooltip" />
+            <D3TreemapDiagramToolTip id="tooltip">HELLO WHERE AM I</D3TreemapDiagramToolTip>
           </TreemapDiagramContainer>
 
           <DataInformation>
