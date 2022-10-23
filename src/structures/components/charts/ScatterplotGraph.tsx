@@ -55,8 +55,8 @@ const ScatterplotGraph = () => {
     const margin = 60;
 
     const dataset = chartData;
-    const dateDataSet = dataset.map((d) => new Date(`${d.Year}-1-1`));
-    const timeDataSetMinutes = dataset.map((d) => new Date(`1970-1-1 00:${d.Time}`));
+    const dateDataSet = dataset.map((d) => new Date(`${d.Year}/01/01`));
+    const timeDataSetMinutes = dataset.map((d) => new Date(`1970/01/01 00:${d.Time}`));
 
     // x-axis min and max dates stored as date objects (converted to date object in datasets)
     const minDate = d3.min(dateDataSet) as Date;
