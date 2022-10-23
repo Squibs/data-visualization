@@ -78,7 +78,9 @@ const IndexPage = () => {
       <StyledFooter>
         <span>Designed &amp; Coded by&nbsp;</span>
         <span>
-          <a href="https://zachary-holman.netlify.app/">Zachary Holman</a>
+          <a href="https://zachary-holman.netlify.app/" target="_blank" rel="noreferrer">
+            Zachary Holman
+          </a>
         </span>
       </StyledFooter>
     </PageContainer>
