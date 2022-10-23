@@ -3,7 +3,6 @@ import { navigate } from 'gatsby';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import * as topojson from 'topojson';
 import twColors from 'tailwindcss/colors';
 import { getDataFromAPI } from '../../utils';
 
