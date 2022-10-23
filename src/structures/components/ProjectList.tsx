@@ -76,7 +76,14 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
 
     // store only the first data parameter if multiple exist
     const queryParams = new URLSearchParams(updatedLocation);
-    const data = `&treemap-data=${queryParams.get('treemap-data')}`;
+    // const data = `&treemap-data=${queryParams.get('treemap-data')}`;
+    let data = '';
+
+    if (queryParams.get('treemap-data')) {
+      data = `&treemap-data=${queryParams.get('treemap-data')}`;
+    } else {
+      data = '';
+    }
 
     return [updatedLocation, data || ''];
   };
