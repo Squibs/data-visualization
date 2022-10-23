@@ -59,7 +59,7 @@ const DataInformation = tw.ul``;
 
 /* ---------------------------------- types --------------------------------- */
 
-export interface DataFormat {
+export type DataFormat = {
   name: string;
   children: {
     name: string;
@@ -69,7 +69,7 @@ export interface DataFormat {
       value: string;
     }[];
   }[];
-}
+};
 
 /* -------------------------------- component ------------------------------- */
 
@@ -85,44 +85,97 @@ const TreemapDiagram = () => {
 
   const svgRef = useRef(null);
 
-  const [title, setTitle] = useState<string>('Video Game Sales');
-  const [source, setSource] = useState<string>('google.com');
-  const [description, setDescription] = useState<string>(
-    'Top 100 Most Sold Video Games Grouped by Platform',
-  );
+  const [title, setTitle] = useState<string>('');
+  const [source, setSource] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
-  const createTreemapDiagram = (data: DataFormat) => {};
-
-  // reused for each graph creation.
-  const graphAndDataHelper = useCallback(() => {
+  const createTreemapDiagram = useCallback(() => {
     if (currentData) {
-      setLoading(false);
-      setError(null);
-      createTreemapDiagram(currentData);
+      const height = 400;
+      const width = 800;
+      const margin = 60;
+
+      // svg
+      d3.select(svgRef.current)
+        .attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`)
+        .attr('xmlns', 'http://www.w3.org/1999/xhtml');
+
+      /** false === min | category === video game console / kickstarter category / movie genre */
+      const getMinMax = (minMax: boolean, category: string) => {
+        const reduceToArray = currentData.children
+          .filter((d) => d.name === category)[0]
+          .children.map((d) => d.value);
+
+        return minMax ? d3.max(reduceToArray) : d3.min(reduceToArray);
+      };
+
+      const treemap = d3.treemap().size([width, height]).paddingInner(1);
+
+      // d3.hierarchy restructures the data so i'll just use any here
+      const hierarchy = d3
+        .hierarchy(currentData)
+        .sum((d: any) => d.value)
+        .sort((a: any, b: any) => b.value - a.value);
+
+      const root = treemap(hierarchy);
+
+      const categories = currentData.children.map((d) => d.name);
+      const colorScale = d3.scaleOrdinal().domain(categories).range(d3.schemePaired);
+
+      const rectGroup = d3
+        .select('.plot-area')
+        .selectAll('g')
+        .data(root.leaves())
+        .enter()
+        .append('g');
+
+      rectGroup
+        .append('rect')
+        .attr('x', (d) => d.x0)
+        .attr('y', (d) => d.y0)
+        .attr('width', (d) => d.x1 - d.x0)
+        .attr('height', (d) => d.y1 - d.y0)
+        .attr('fill', (d: any) => colorScale(d.data.category) as string);
+
+      rectGroup
+        .append('foreignObject')
+        .attr('x', (d) => d.x0)
+        .attr('y', (d) => d.y0)
+        .attr('width', (d) => d.x1 - d.x0)
+        .attr('height', (d) => d.y1 - d.y0)
+        .append('xhtml:div')
+        .text((d: any) => d.data.name)
+        .attr('style', 'color: #000;');
     }
   }, [currentData]);
 
   // once data is retrieved create graph
   useEffect(() => {
     // only if data exists create the diagram; none of this will run on page load
-    if (videoGameData || kickstarterData || movieData) {
+    if (selectedGraph !== '' && (videoGameData || kickstarterData || movieData)) {
       switch (selectedGraph) {
         case 'videogame':
           if (videoGameData) {
             setCurrentData(videoGameData);
-            graphAndDataHelper();
+            setLoading(false);
+            setError(null);
+            createTreemapDiagram();
           }
           break;
         case 'kickstarter':
           if (kickstarterData) {
             setCurrentData(kickstarterData);
-            graphAndDataHelper();
+            setLoading(false);
+            setError(null);
+            createTreemapDiagram();
           }
           break;
         case 'movie':
           if (movieData) {
             setCurrentData(movieData);
-            graphAndDataHelper();
+            setLoading(false);
+            setError(null);
+            createTreemapDiagram();
           }
           break;
         default:
@@ -130,35 +183,37 @@ const TreemapDiagram = () => {
           setSelectedGraph('videogame');
       }
     }
-  }, [currentData, graphAndDataHelper, kickstarterData, movieData, selectedGraph, videoGameData]);
+  }, [createTreemapDiagram, currentData, kickstarterData, movieData, selectedGraph, videoGameData]);
 
   // retrieve data
   useEffect(() => {
-    switch (selectedGraph) {
-      case 'videogame':
-        // videoGameData ?? getDataFromAPI('videogame');
-        setVideoGameData(fakeVideoGameData);
-        setTitle('Video Game Sales');
-        setSource('google.com');
-        setDescription('Top 100 most sold video games grouped by platform');
-        break;
-      case 'kickstarter':
-        // kickstarterData ?? getDataFromAPI('kickstarter');
-        setKickStarterData(fakeKickstarterData);
-        setTitle('Kickstarter Pledges');
-        setSource('google.com');
-        setDescription('Top 100 most pledged kickstarter campaigns grouped by category');
-        break;
-      case 'movie':
-        // movieData ?? getDataFromAPI('movie');
-        setMovieData(fakeMovieData);
-        setTitle('Movie Sales');
-        setSource('google.com');
-        setDescription('Top 100 highest grossing movies grouped by genre');
-        break;
-      default:
-        // this would run if there was no string set for selectedGraph
-        setSelectedGraph('videogame');
+    if (selectedGraph !== '') {
+      switch (selectedGraph) {
+        case 'videogame':
+          // videoGameData ?? getDataFromAPI('videogame');
+          setVideoGameData(fakeVideoGameData);
+          setTitle('Video Game Sales');
+          setSource('google.com');
+          setDescription('Top 100 most sold video games grouped by platform');
+          break;
+        case 'kickstarter':
+          // kickstarterData ?? getDataFromAPI('kickstarter');
+          setKickStarterData(fakeKickstarterData);
+          setTitle('Kickstarter Pledges');
+          setSource('google.com');
+          setDescription('Top 100 most pledged kickstarter campaigns grouped by category');
+          break;
+        case 'movie':
+          // movieData ?? getDataFromAPI('movie');
+          setMovieData(fakeMovieData);
+          setTitle('Movie Sales');
+          setSource('google.com');
+          setDescription('Top 100 highest grossing movies grouped by genre');
+          break;
+        default:
+          // this would run if there was no string set for selectedGraph
+          setSelectedGraph('videogame');
+      }
     }
   }, [selectedGraph]);
 
