@@ -58,7 +58,7 @@ const HeatMap = () => {
 
     const dataset = chartData;
     const yearDataSet = dataset.monthlyVariance.map((d) => new Date(`${d.year}-1-1`));
-    const monthDataSet = dataset.monthlyVariance.map((d) => new Date(`${d.month}-1-1`));
+    const monthDataSet = dataset.monthlyVariance.map((d) => new Date(`1970-${d.month}-1`));
 
     // x-axis min and max (years) stored as date objects (converted to date object in dataset declaration)
     const minYear = d3.min(yearDataSet) as Date;
