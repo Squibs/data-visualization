@@ -3,7 +3,7 @@ import { navigate } from 'gatsby';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import twColors from 'tailwindcss/colors';
+import twColors, { current } from 'tailwindcss/colors';
 import { getDataFromAPI } from '../../utils';
 
 import fakeVideoGameData from '../../../data/data-backup-treemap-diagram-(Video Game Sales).json';
@@ -41,7 +41,7 @@ const TreemapGraphSelector = styled.div`
   }
 `;
 
-const TreemapDiagramContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
+const TreemapDiagramContainer = tw.div`w-full h-auto max-w-screen-lg m-auto`;
 const D3TreemapDiagram = tw.svg`w-full h-full`;
 const D3TreemapDiagramToolTip = styled.div`
   ${tw`[display: none] absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
@@ -95,9 +95,13 @@ const TreemapDiagram = () => {
       const margin = 60;
 
       // svg
-      d3.select(svgRef.current)
+      const svg = d3
+        .select(svgRef.current)
         .attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`)
         .attr('xmlns', 'http://www.w3.org/1999/xhtml');
+
+      svg.append('g').attr('class', 'plot-area');
+      svg.append('g').attr('id', 'legend');
 
       // treemap size / padding
       const treemap = d3
@@ -141,7 +145,7 @@ const TreemapDiagram = () => {
         .attr('height', (d) => d.y1 - d.y0)
         .append('xhtml:div')
         .text((d: any) => d.data.name)
-        .attr('style', 'color: #000; font-size: 0.75rem;');
+        .attr('style', 'color: #000; font-size: 0.75rem; padding: 2px;');
     }
   }, [currentData]);
 
@@ -228,8 +232,13 @@ const TreemapDiagram = () => {
           type="button"
           className={selectedGraph === 'videogame' ? 'active' : ''}
           onClick={() => {
-            setSelectedGraph('videogame');
+            if (svgRef.current) {
+              const currentSVG: Element = svgRef.current;
+              currentSVG.innerHTML = '';
+            }
+            setCurrentData(null);
             navigate('?treemap-diagram&treemap-data=videogame');
+            setSelectedGraph('videogame');
           }}
         >
           Video Game Data
@@ -238,8 +247,13 @@ const TreemapDiagram = () => {
           type="button"
           className={selectedGraph === 'kickstarter' ? 'active' : ''}
           onClick={() => {
-            setSelectedGraph('kickstarter');
+            if (svgRef.current) {
+              const currentSVG: Element = svgRef.current;
+              currentSVG.innerHTML = '';
+            }
+            setCurrentData(null);
             navigate('?treemap-diagram&treemap-data=kickstarter');
+            setSelectedGraph('kickstarter');
           }}
         >
           Kickstarter Data
@@ -248,8 +262,13 @@ const TreemapDiagram = () => {
           type="button"
           className={selectedGraph === 'movie' ? 'active' : ''}
           onClick={() => {
-            setSelectedGraph('movie');
+            if (svgRef.current) {
+              const currentSVG: Element = svgRef.current;
+              currentSVG.innerHTML = '';
+            }
+            setCurrentData(null);
             navigate('?treemap-diagram&treemap-data=movie');
+            setSelectedGraph('movie');
           }}
         >
           Movie Data
@@ -267,12 +286,7 @@ const TreemapDiagram = () => {
           </h2>
 
           <TreemapDiagramContainer>
-            <D3TreemapDiagram ref={svgRef} preserveAspectRatio="xMinYMin meet">
-              <g className="plot-area" />
-              <g id="x-axis" />
-              <g id="y-axis" />
-              <g id="legend" />
-            </D3TreemapDiagram>
+            <D3TreemapDiagram ref={svgRef} preserveAspectRatio="xMinYMin meet" />
             <D3TreemapDiagramToolTip id="tooltip" />
           </TreemapDiagramContainer>
 
