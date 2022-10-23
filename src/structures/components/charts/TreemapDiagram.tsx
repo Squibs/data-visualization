@@ -125,7 +125,6 @@ const TreemapDiagram = () => {
         .attr('xmlns', 'http://www.w3.org/1999/xhtml');
 
       svg.append('g').attr('class', 'plot-area');
-      svg.append('g').attr('id', 'legend');
 
       // treemap size / padding
       const treemap = d3
@@ -199,6 +198,7 @@ const TreemapDiagram = () => {
         .select(legendRef.current)
         .attr('viewBox', `0 0 ${legendWidth} ${legendHeight}`)
         .append('g')
+        .attr('id', 'legend')
         .attr('transform', `translate(${margin}, ${legendOffset})`)
         .selectAll('g')
         .data(categories)
@@ -218,7 +218,8 @@ const TreemapDiagram = () => {
         .append('rect')
         .attr('width', legendRectSize)
         .attr('height', legendRectSize)
-        .attr('fill', (d) => colors(d) as string);
+        .attr('fill', (d) => colors(d) as string)
+        .attr('class', 'legend-item');
 
       legend
         .append('text')
