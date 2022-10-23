@@ -3,7 +3,7 @@ import { navigate } from 'gatsby';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import twColors, { current } from 'tailwindcss/colors';
+import twColors from 'tailwindcss/colors';
 import { getDataFromAPI } from '../../utils';
 
 import fakeVideoGameData from '../../../data/data-backup-treemap-diagram-(Video Game Sales).json';
@@ -43,6 +43,7 @@ const TreemapGraphSelector = styled.div`
 
 const TreemapDiagramContainer = tw.div`w-full h-auto max-w-screen-lg m-auto`;
 const D3TreemapDiagram = tw.svg`w-full h-full`;
+const D3TreemapDiagramLegend = tw.svg`w-full h-full`;
 const D3TreemapDiagramToolTip = styled.div`
   ${tw`[display: none] absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
   pointer-events-none border-2 border-solid rounded-md border-black [line-height: 1em]`}
@@ -83,6 +84,7 @@ const TreemapDiagram = () => {
   const [currentData, setCurrentData] = useState<DataFormat | null>(null);
 
   const svgRef = useRef(null);
+  const legendRef = useRef(null);
 
   const [title, setTitle] = useState<string>('');
   const [source, setSource] = useState<string>('');
@@ -94,6 +96,28 @@ const TreemapDiagram = () => {
       const width = 800;
       const margin = 60;
 
+      // https://mokole.com/palette.html
+      // https://bl.ocks.org/mbostock/4063582
+      const colors = d3.scaleOrdinal().range(
+        [
+          '#2f4f4f', // white
+          '#8b4513', // white
+          '#191970', // white
+          '#006400', // white
+          '#ff0000', // white
+          '#0000cd', // white
+          '#ff00ff', // white
+          '#f0e68c', // black
+          '#6495ed', // black
+          '#ee82ee', // black
+          '#ffb6c1', // black
+          '#00ced1', // black
+          '#ffa500', // black
+          '#ffff00', // black
+          '#00ff00', // black
+          '#00fa9a', // black
+        ].map((c) => d3.interpolateRgb(c, '#fff')(0.3)),
+      );
       // svg
       const svg = d3
         .select(svgRef.current)
@@ -116,8 +140,12 @@ const TreemapDiagram = () => {
         .sort((a: any, b: any) => b.value - a.value);
       const root = treemap(hierarchy);
 
-      const categories = currentData.children.map((d) => d.name);
-      const colorScale = d3.scaleOrdinal().domain(categories).range(d3.schemePaired);
+      // const categories = currentData.children.map((d) => d.name);
+      const categories = root
+        .leaves()
+        .map((nodes: any) => nodes.data.category)
+        .filter((c, i, s) => s.indexOf(c) === i);
+      // const colorScale = d3.scaleOrdinal().domain(categories).range(colors);
 
       // groups for each game/movie/kickstarter
       const rectGroup = d3
@@ -130,11 +158,15 @@ const TreemapDiagram = () => {
       // each treemap rect
       rectGroup
         .append('rect')
+        .attr('class', 'tile')
         .attr('x', (d) => d.x0)
         .attr('y', (d) => d.y0)
         .attr('width', (d) => d.x1 - d.x0)
         .attr('height', (d) => d.y1 - d.y0)
-        .attr('fill', (d: any) => colorScale(d.data.category) as string);
+        .attr('fill', (d: any) => colors(d.data.category) as string)
+        .attr('data-name', (d: any) => d.data.name)
+        .attr('data-category', (d: any) => d.data.category)
+        .attr('data-value', (d: any) => d.data.value);
 
       // foreignObject for each rect text that can wrap
       rectGroup
@@ -145,7 +177,55 @@ const TreemapDiagram = () => {
         .attr('height', (d) => d.y1 - d.y0)
         .append('xhtml:div')
         .text((d: any) => d.data.name)
-        .attr('style', 'color: #000; font-size: 0.75rem; padding: 2px;');
+        .attr('style', (d) => {
+          console.log(d);
+          return 'color: #000; font-size: 10px; padding: 2px;';
+        });
+
+      // -------------------legend------------------------
+      const legendWidth = width + margin * 2;
+      const legendHeight = height / 3.85; // about 1/4 the size of the chart, little more for margin
+
+      const legendOffset = 10;
+      const legendRectSize = 15;
+      const legendXSpacing = 160;
+      const legendYSpacing = 10;
+      const legendTextXOffset = 7;
+      const legendTextYOffset = -2;
+
+      const legendElementsPerRow = Math.floor(legendWidth / legendXSpacing);
+
+      const legend = d3
+        .select(legendRef.current)
+        .attr('viewBox', `0 0 ${legendWidth} ${legendHeight}`)
+        .append('g')
+        .attr('transform', `translate(${margin}, ${legendOffset})`)
+        .selectAll('g')
+        .data(categories)
+        .enter()
+        .append('g')
+        .attr(
+          'transform',
+          (d, i) =>
+            `translate(${(i % legendElementsPerRow) * legendXSpacing}, ${
+              Math.floor(i / legendElementsPerRow) * legendRectSize +
+              legendYSpacing * Math.floor(i / legendElementsPerRow)
+            })`,
+        );
+      // took this calculation from fCC example
+
+      legend
+        .append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .attr('fill', (d) => colors(d) as string);
+
+      legend
+        .append('text')
+        .text((d) => d)
+        .attr('x', legendRectSize + legendTextXOffset)
+        .attr('y', legendRectSize + legendTextYOffset)
+        .attr('fill', '#9d9d9d');
     }
   }, [currentData]);
 
@@ -193,21 +273,27 @@ const TreemapDiagram = () => {
           // videoGameData ?? getDataFromAPI('videogame');
           setVideoGameData(fakeVideoGameData);
           setTitle('Video Game Sales');
-          setSource('google.com');
+          setSource(
+            'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json',
+          );
           setDescription('Top 100 most sold video games grouped by platform');
           break;
         case 'kickstarter':
           // kickstarterData ?? getDataFromAPI('kickstarter');
           setKickStarterData(fakeKickstarterData);
           setTitle('Kickstarter Pledges');
-          setSource('google.com');
+          setSource(
+            'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/kickstarter-funding-data.json',
+          );
           setDescription('Top 100 most pledged kickstarter campaigns grouped by category');
           break;
         case 'movie':
           // movieData ?? getDataFromAPI('movie');
           setMovieData(fakeMovieData);
           setTitle('Movie Sales');
-          setSource('google.com');
+          setSource(
+            'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json',
+          );
           setDescription('Top 100 highest grossing movies grouped by genre');
           break;
         default:
@@ -287,6 +373,7 @@ const TreemapDiagram = () => {
 
           <TreemapDiagramContainer>
             <D3TreemapDiagram ref={svgRef} preserveAspectRatio="xMinYMin meet" />
+            <D3TreemapDiagramLegend ref={legendRef} preserveAspectRatio="xMinYMin meet" />
             <D3TreemapDiagramToolTip id="tooltip" />
           </TreemapDiagramContainer>
 
@@ -312,8 +399,11 @@ const TreemapDiagram = () => {
                   {'\u00A0'}
                   Source
                 </a>
+                {'\u00A0'}
+                (From freeCodeCamp)
               </i>
             </li>
+            <li key="2">Unknown Date</li>
           </DataInformation>
         </>
       )}
