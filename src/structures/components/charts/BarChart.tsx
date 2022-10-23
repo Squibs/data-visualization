@@ -187,17 +187,6 @@ const BarChart = () => {
 
           <DataInformation>
             <li key="0">
-              Updated:
-              {'\u00A0'}
-              <i>
-                {new Date(data.updated_at).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
-              </i>
-            </li>
-            <li key="1">
               Size:
               {'\u00A0'}
               <i>
@@ -206,7 +195,7 @@ const BarChart = () => {
                 KB
               </i>
             </li>
-            <li key="2">
+            <li key="1">
               Data:
               {'\u00A0'}
               <i>
