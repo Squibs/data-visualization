@@ -31,6 +31,7 @@
     "gatsby-transformer-sharp": "^4.23.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "react-redux": "^8.0.4",
     "styled-components": "^5.3.5",
     "styled-normalize": "^8.0.7",
@@ -44,6 +45,7 @@
     "@squibs/prettier-config": "^1.0.3",
     "@squibs/ts-config": "^1.0.1",
     "@types/d3": "^7.4.0",
+    "@types/react-helmet": "^6.1.5",
     "@types/styled-components": "^5.1.26",
     "@types/topojson": "^3.2.3",
     "babel-preset-gatsby": "^2.24.0"

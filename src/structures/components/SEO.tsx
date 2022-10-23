@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { Helmet } from 'react-helmet';
 
 /* ---------------------------------- types --------------------------------- */
 
@@ -30,18 +31,18 @@ const SEO = ({ description, title, children }: SEOProps) => {
   const defaultTitle = site.siteMetadata?.title;
 
   return (
-    <>
+    <Helmet defer={false} htmlAttributes={{ lang: 'en' }}>
       <title>{defaultTitle ? `${title} | ${defaultTitle}` : title}</title>
       <meta name="description" content={metaDescription} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:type" content="website" />
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:creator" content={site.siteMetadata?.author || ``} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={metaDescription} />
       {children}
-    </>
+    </Helmet>
   );
 };
 

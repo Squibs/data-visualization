@@ -2,8 +2,8 @@ import type { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `Squibs fcc Data Visualization`,
-    description: `A combination of all the freeCodeCamp Data Visualization projects.`,
+    title: `Squibs | freeCodeCamp`,
+    description: `A combination of all my freeCodeCamp Data Visualization projects created using D3.js.`,
     author: `@SquibsVids`,
     siteUrl: `https://data-visualization.squibs.vercel.app/`,
   },

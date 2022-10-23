@@ -54,15 +54,21 @@ const StyledFooter = styled.footer`
 const IndexPage = () => {
   const [currentGraph, setCurrentGraph] = useState<ReactNode>(<HomePage />);
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
+  const [currentDescription, setCurrentDescription] = useState<string>('');
 
   // used to get current graph from dropdown
-  const updateCurrentGraph = useCallback((project: ReactNode, title: string) => {
-    setCurrentGraph(project);
-    setCurrentGraphTitle(title);
-  }, []);
+  const updateCurrentGraph = useCallback(
+    (project: ReactNode, title: string, description: string) => {
+      setCurrentGraph(project);
+      setCurrentGraphTitle(title);
+      setCurrentDescription(description);
+    },
+    [],
+  );
 
   return (
     <PageContainer>
+      <SEO title={currentGraphTitle} description={currentDescription} />
       <div style={{ backgroundColor: '#2c2c2c' }}>
         <PageTitle>Data Visualization</PageTitle>
         {useMediaQuery(`screen and (max-width: 639px)`) ? (
@@ -91,4 +97,4 @@ const IndexPage = () => {
 
 export default IndexPage;
 
-export const Head = () => <SEO title="Home Page" />;
+// export const Head = () =>  <SEO title="Data Visualization" />;
