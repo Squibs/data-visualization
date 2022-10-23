@@ -42,7 +42,7 @@ const TreemapGraphSelector = styled.div`
   }
 `;
 
-const TreemapDiagramContainer = tw.div`w-full h-auto max-w-xl m-auto`;
+const TreemapDiagramContainer = tw.div`w-full h-auto max-w-screen-xl m-auto`;
 const D3TreemapDiagram = tw.svg`w-full h-full`;
 const D3TreemapDiagramToolTip = styled.div`
   ${tw`[display: none] absolute p-1 w-fit [max-width: 200px] h-fit bg-white transition text-center text-black
@@ -100,28 +100,23 @@ const TreemapDiagram = () => {
         .attr('viewBox', `0 0 ${width + margin * 2} ${height + margin * 2}`)
         .attr('xmlns', 'http://www.w3.org/1999/xhtml');
 
-      /** false === min | category === video game console / kickstarter category / movie genre */
-      const getMinMax = (minMax: boolean, category: string) => {
-        const reduceToArray = currentData.children
-          .filter((d) => d.name === category)[0]
-          .children.map((d) => d.value);
-
-        return minMax ? d3.max(reduceToArray) : d3.min(reduceToArray);
-      };
-
-      const treemap = d3.treemap().size([width, height]).paddingInner(1);
+      // treemap size / padding
+      const treemap = d3
+        .treemap()
+        .size([width + margin * 2, height + margin * 2])
+        .paddingInner(1);
 
       // d3.hierarchy restructures the data so i'll just use any here
       const hierarchy = d3
         .hierarchy(currentData)
         .sum((d: any) => d.value)
         .sort((a: any, b: any) => b.value - a.value);
-
       const root = treemap(hierarchy);
 
       const categories = currentData.children.map((d) => d.name);
       const colorScale = d3.scaleOrdinal().domain(categories).range(d3.schemePaired);
 
+      // groups for each game/movie/kickstarter
       const rectGroup = d3
         .select('.plot-area')
         .selectAll('g')
@@ -129,6 +124,7 @@ const TreemapDiagram = () => {
         .enter()
         .append('g');
 
+      // each treemap rect
       rectGroup
         .append('rect')
         .attr('x', (d) => d.x0)
@@ -137,6 +133,7 @@ const TreemapDiagram = () => {
         .attr('height', (d) => d.y1 - d.y0)
         .attr('fill', (d: any) => colorScale(d.data.category) as string);
 
+      // foreignObject for each rect text that can wrap
       rectGroup
         .append('foreignObject')
         .attr('x', (d) => d.x0)
@@ -145,7 +142,7 @@ const TreemapDiagram = () => {
         .attr('height', (d) => d.y1 - d.y0)
         .append('xhtml:div')
         .text((d: any) => d.data.name)
-        .attr('style', 'color: #000;');
+        .attr('style', 'color: #000; font-size: 0.75rem;');
     }
   }, [currentData]);
 
@@ -266,7 +263,7 @@ const TreemapDiagram = () => {
           <h1 id="title" tw="text-center text-2xl font-medium">
             {title}
           </h1>
-          <h2 id="description" tw="text-center text-xl font-light">
+          <h2 id="description" tw="text-center text-xl font-light mb-2">
             {description}
           </h2>
 
