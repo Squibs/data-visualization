@@ -32,7 +32,7 @@ const IndexPage: React.FC = () => {
         projects I created that are required to get the freeCodeCamp
         <i> Data Visualization </i>
         certification (
-          <a href="#">my certification</a>
+          <a href="https://www.freecodecamp.org/certification/squibs/data-visualization">my certification</a>
         ).
       </p>
       <br />
