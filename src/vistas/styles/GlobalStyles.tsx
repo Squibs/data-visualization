@@ -6,7 +6,7 @@ import { GlobalStyles as BaseStyles } from 'twin.macro';
 /* --------------------------------- styles --------------------------------- */
 
 const GlobalStyle = createGlobalStyle`
-  html, body, #___gatsby, #gatsby-focus-wrapper { height: 100%; background-color: '#2c2c2c'; }
+  html, body, #___gatsby, #gatsby-focus-wrapper { height: 100%; background-color: #2c2c2c; }
 `;
 
 /* -------------------------------- component ------------------------------- */
