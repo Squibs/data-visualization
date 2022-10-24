@@ -1,4 +1,3 @@
-import { HeadProps } from 'gatsby';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -54,6 +53,11 @@ const IndexPage: React.FC = () => {
 
 export default IndexPage;
 
-export const Head = ({ location }: HeadProps) => {
-  return <SEO title="Home Page" />;
+export const Head = () => {
+  return (
+    <SEO
+      title="Home"
+      description="A combination of all my freeCodeCamp Data Visualization projects created using D3.js."
+    />
+  );
 };

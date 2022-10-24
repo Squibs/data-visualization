@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { navigate } from 'gatsby';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
@@ -10,7 +10,7 @@ import { useLocation } from '@reach/router';
 type IsLargeScreenProp = { isLargeScreen?: boolean };
 type NavLinkProps = { firstOrLast: string } & IsLargeScreenProp;
 
-type NavArrayLayout = [[number, string, string, string]];
+type NavArrayLayout = [[number, string, string]];
 
 type ProjectListProps = {
   updateCurrentGraph: (title: string) => void;
@@ -52,42 +52,12 @@ const NavLink = styled.button<NavLinkProps>`
 /* -------------------------------- component ------------------------------- */
 
 const graphArray = [
-  [
-    0,
-    'Home',
-    '/',
-    'A combination of all my freeCodeCamp Data Visualization projects created using D3.js.',
-  ],
-  [
-    1,
-    'Bar Chart',
-    '/bar-chart',
-    'Data visualization project, bar chart, displaying information about the United States GDP over 68 years.',
-  ],
-  [
-    2,
-    'Scatterplot Graph',
-    '/scatterplot-graph',
-    'Data visualization project, scatterplot graph, displaying information about doping allegations in professional bicycling.',
-  ],
-  [
-    3,
-    'Heat Map',
-    '/heat-map',
-    'Data visualization project, heat map, displaying information about the global land-surface temperatures over 262 years.',
-  ],
-  [
-    4,
-    'Choropleth Map',
-    '/choropleth-map',
-    'Data visualization project, choropleth map, displaying information about the United States educational attainment from 2010 - 2014.',
-  ],
-  [
-    5,
-    'Treemap Diagram',
-    '/treemap-diagram',
-    'Data visualization project, treemap diagram, featuring three different graphs relating to video game sales, kickstarter pledges, and movie sales.',
-  ],
+  [0, 'Home', '/'],
+  [1, 'Bar Chart', '/bar-chart'],
+  [2, 'Scatterplot Graph', '/scatterplot-graph'],
+  [3, 'Heat Map', '/heat-map'],
+  [4, 'Choropleth Map', '/choropleth-map'],
+  [5, 'Treemap Diagram', '/treemap-diagram'],
 ] as unknown as NavArrayLayout;
 
 const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {

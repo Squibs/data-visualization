@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import * as d3 from 'd3';
 import { getDataFromAPI } from '../utils';
 import fakeData from '../../data/data-backup-heat-map-(Global Temperature).json';
+import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -292,3 +293,12 @@ const HeatMap = () => {
 /* -------------------- default props / queries / exports ------------------- */
 
 export default HeatMap;
+
+export const Head = () => {
+  return (
+    <SEO
+      title="Heat Map"
+      description="Data visualization project, heat map, displaying information about the global land-surface temperatures over 262 years."
+    />
+  );
+};

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import * as d3 from 'd3';
 import getDataFromAPI from '../utils/getDataFromAPI';
 import fakeData from '../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
+import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -263,3 +264,12 @@ const ScatterplotGraph = () => {
 /* -------------------- default props / queries / exports ------------------- */
 
 export default ScatterplotGraph;
+
+export const Head = () => {
+  return (
+    <SEO
+      title="Scatterplot"
+      description="Data visualization project, scatterplot graph, displaying information about doping allegations in professional bicycling."
+    />
+  );
+};

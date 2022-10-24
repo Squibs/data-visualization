@@ -6,6 +6,7 @@ import * as topojson from 'topojson';
 import { getDataFromAPI } from '../utils';
 import fakeCountyData from '../../data/data-backup-choropleth-map-(US County Data).json';
 import fakeEducationData from '../../data/data-backup-choropleth-map-(US Education Data).json';
+import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -273,3 +274,12 @@ const ChoroplethMap = () => {
 /* -------------------- default props / queries / exports ------------------- */
 
 export default ChoroplethMap;
+
+export const Head = () => {
+  return (
+    <SEO
+      title="Choropleth Map"
+      description="Data visualization project, choropleth map, displaying information about the United States educational attainment from 2010 - 2014."
+    />
+  );
+};

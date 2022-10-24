@@ -9,6 +9,7 @@ import { getDataFromAPI } from '../utils';
 import fakeVideoGameData from '../../data/data-backup-treemap-diagram-(Video Game Sales).json';
 import fakeKickstarterData from '../../data/data-backup-treemap-diagram-(Kickstarter Pledges).json';
 import fakeMovieData from '../../data/data-backup-treemap-diagram-(Movie Sales).json';
+import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -447,3 +448,12 @@ const TreemapDiagram = () => {
 /* -------------------- default props / queries / exports ------------------- */
 
 export default TreemapDiagram;
+
+export const Head = () => {
+  return (
+    <SEO
+      title="Treemap Diagram"
+      description="Data visualization project, treemap diagram, featuring three different graphs relating to video game sales, kickstarter pledges, and movie sales."
+    />
+  );
+};

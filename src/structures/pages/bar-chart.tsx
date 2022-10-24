@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import styled from 'styled-components';
 import getDataFromAPI from '../utils/getDataFromAPI';
 import fakeData from '../../data/data-backup-bar-chart-(US GDP).json';
+import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -219,3 +220,12 @@ const BarChart = () => {
 /* -------------------- default props / queries / exports ------------------- */
 
 export default BarChart;
+
+export const Head = () => {
+  return (
+    <SEO
+      title="Bar Chart"
+      description="Data visualization project, bar chart, displaying information about the United States GDP over 68 years."
+    />
+  );
+};
