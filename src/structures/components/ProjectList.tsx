@@ -98,6 +98,11 @@ const graphArray = [
   ],
 ] as unknown as NavArrayLayout;
 
+export const metaData = graphArray.reduce(
+  (a, v) => ({ ...a, [v[2]]: { key: v[0], description: v[4], title: v[1] } }),
+  {},
+) as any;
+
 const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {
   const [expandNav, setExpandNav] = useState(false);
   const [activeURL, setActiveURL] = useState('');

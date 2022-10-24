@@ -1,9 +1,11 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import type { HeadProps } from 'gatsby';
 import { Router, RouteComponentProps } from '@reach/router';
 import { ProjectList, HomePage, SEO } from '../components';
 import { useMediaQuery } from '../hooks';
+import { metaData } from '../components/ProjectList';
 
 /* ---------------------------------- types --------------------------------- */
 
@@ -87,7 +89,6 @@ const IndexPage: React.FC<IndexPageProps> = () => {
 
   return (
     <PageContainer>
-      <SEO title={currentGraphTitle} description={currentDescription} />
       <div style={{ backgroundColor: '#2c2c2c' }}>
         <PageTitle>Data Visualization</PageTitle>
         {useMediaQuery(`screen and (max-width: 639px)`) ? (
@@ -116,4 +117,7 @@ const IndexPage: React.FC<IndexPageProps> = () => {
 
 export default App;
 
-// export const Head = () =>  <SEO title="Data Visualization" />;
+export const Head = ({ location }: HeadProps) => {
+  const path = metaData[location.pathname];
+  return <SEO title={path.title} description={path.description} />;
+};
