@@ -4,13 +4,11 @@ A collection of all the freeCodeCamp _Data Visualization_ projects that I have c
 
 ## [Front End Development Certificaton Projects](https://github.com/Squibs/freeCodeCamp#freecodecamp) (Go Back to My freeCodeCamp Repository)
 
-<a href="https://data-visualization.squibs.vercel.app" tart="_blank"><img src="" height="400" alt="Screnshot of my Data Visualization project / app"/></a>
+<a href="https://data-visualization.squibs.vercel.app" tart="_blank"><img src="project documents/screenshot-data-visualization.png" height="400" alt="Screnshot of my Data Visualization project / app"/></a>
 
 ### [Data Visualization](https://data-visualization.squibs.vercel.app/) (Click to view functional site)
 
-<em>Work in Progress</em>
-
-<!-- <em>Completed October 00, 2022</em> -->
+<em>Completed October 24, 2022</em>
 
 A single site that is a collection of all the [D3](https://d3js.org/) projects I created that are required to get the freeCodeCamp _Data Visualization_ certification ([my certification]()).
 
