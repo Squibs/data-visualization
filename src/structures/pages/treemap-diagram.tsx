@@ -4,11 +4,11 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import twColors from 'tailwindcss/colors';
-import { getDataFromAPI } from '../../utils';
+import { getDataFromAPI } from '../utils';
 
-import fakeVideoGameData from '../../../data/data-backup-treemap-diagram-(Video Game Sales).json';
-import fakeKickstarterData from '../../../data/data-backup-treemap-diagram-(Kickstarter Pledges).json';
-import fakeMovieData from '../../../data/data-backup-treemap-diagram-(Movie Sales).json';
+import fakeVideoGameData from '../../data/data-backup-treemap-diagram-(Video Game Sales).json';
+import fakeKickstarterData from '../../data/data-backup-treemap-diagram-(Kickstarter Pledges).json';
+import fakeMovieData from '../../data/data-backup-treemap-diagram-(Movie Sales).json';
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -105,23 +105,27 @@ const TreemapDiagram = () => {
       const colors = d3.scaleOrdinal().range(
         [
           '#2f4f4f', // white
-          '#8b4513', // white
-          '#191970', // white
-          '#006400', // white
+          '#2e8b57', // white
+          '#7f0000', // white
+          '#808000', // white
+          '#4b0082', // white
+          '#ff8c00', // black
           '#ff0000', // white
-          '#0000cd', // white
-          '#ff00ff', // white
-          '#f0e68c', // black
-          '#6495ed', // black
-          '#ee82ee', // black
-          '#ffb6c1', // black
-          '#00ced1', // black
-          '#ffa500', // black
-          '#ffff00', // black
           '#00ff00', // black
+          '#ee82ee', // black
           '#00fa9a', // black
+          '#00ffff', // black
+          '#0000ff', // white
+          '#d8bfd8', // black
+          '#ff00ff', // white
+          '#fa8072', // black
+          '#eee8aa', // black
+          '#ffff54', // black
+          '#6495ed', // black
+          '#ff1493', // white
         ].map((c) => d3.interpolateRgb(c, '#fff')(0.3)),
       );
+
       // svg
       const svg = d3
         .select(svgRef.current)
@@ -148,7 +152,6 @@ const TreemapDiagram = () => {
         .leaves()
         .map((nodes: any) => nodes.data.category)
         .filter((c, i, s) => s.indexOf(c) === i);
-      // const colorScale = d3.scaleOrdinal().domain(categories).range(colors);
 
       // groups for each game/movie/kickstarter
       const rectGroup = d3

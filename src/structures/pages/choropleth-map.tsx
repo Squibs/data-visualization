@@ -3,9 +3,9 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
-import { getDataFromAPI } from '../../utils';
-import fakeCountyData from '../../../data/data-backup-choropleth-map-(US County Data).json';
-import fakeEducationData from '../../../data/data-backup-choropleth-map-(US Education Data).json';
+import { getDataFromAPI } from '../utils';
+import fakeCountyData from '../../data/data-backup-choropleth-map-(US County Data).json';
+import fakeEducationData from '../../data/data-backup-choropleth-map-(US Education Data).json';
 
 /* --------------------------------- styles --------------------------------- */
 

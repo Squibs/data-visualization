@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import * as d3 from 'd3';
 import styled from 'styled-components';
-import getDataFromAPI from '../../utils/getDataFromAPI';
-import fakeData from '../../../data/data-backup-bar-chart-(US GDP).json';
+import getDataFromAPI from '../utils/getDataFromAPI';
+import fakeData from '../../data/data-backup-bar-chart-(US GDP).json';
 
 /* --------------------------------- styles --------------------------------- */
 

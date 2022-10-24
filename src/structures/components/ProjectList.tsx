@@ -4,18 +4,16 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import twColors from 'tailwindcss/colors';
 import { useLocation } from '@reach/router';
-import { BarChart, ScatterplotGraph, HeatMap, ChoroplethMap, TreemapDiagram } from './charts';
-import HomePage from './HomePage';
 
 /* ---------------------------------- types --------------------------------- */
 
 type IsLargeScreenProp = { isLargeScreen?: boolean };
 type NavLinkProps = { firstOrLast: string } & IsLargeScreenProp;
 
-type NavArrayLayout = [[number, string, string, ReactNode, string]];
+type NavArrayLayout = [[number, string, string, string]];
 
 type ProjectListProps = {
-  updateCurrentGraph: (project: ReactNode, title: string, description: string) => void;
+  updateCurrentGraph: (title: string) => void;
 } & IsLargeScreenProp;
 
 /* --------------------------------- styles --------------------------------- */
@@ -58,50 +56,39 @@ const graphArray = [
     0,
     'Home',
     '/',
-    <HomePage />,
     'A combination of all my freeCodeCamp Data Visualization projects created using D3.js.',
   ],
   [
     1,
     'Bar Chart',
     '/bar-chart',
-    <BarChart />,
     'Data visualization project, bar chart, displaying information about the United States GDP over 68 years.',
   ],
   [
     2,
     'Scatterplot Graph',
     '/scatterplot-graph',
-    <ScatterplotGraph />,
     'Data visualization project, scatterplot graph, displaying information about doping allegations in professional bicycling.',
   ],
   [
     3,
     'Heat Map',
     '/heat-map',
-    <HeatMap />,
     'Data visualization project, heat map, displaying information about the global land-surface temperatures over 262 years.',
   ],
   [
     4,
     'Choropleth Map',
     '/choropleth-map',
-    <ChoroplethMap />,
     'Data visualization project, choropleth map, displaying information about the United States educational attainment from 2010 - 2014.',
   ],
   [
     5,
     'Treemap Diagram',
     '/treemap-diagram',
-    <TreemapDiagram />,
     'Data visualization project, treemap diagram, featuring three different graphs relating to video game sales, kickstarter pledges, and movie sales.',
   ],
 ] as unknown as NavArrayLayout;
-
-export const metaData = graphArray.reduce(
-  (a, v) => ({ ...a, [v[2]]: { key: v[0], description: v[4], title: v[1] } }),
-  {},
-) as any;
 
 const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {
   const [expandNav, setExpandNav] = useState(false);
@@ -126,12 +113,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
     return [windowLocation, data || ''];
   };
 
-  const handleNavigation = (
-    project: React.ReactNode,
-    title: string,
-    url: string,
-    description: string,
-  ) => {
+  const handleNavigation = (url: string, title: string) => {
     const locationAndData = getLocationAndDataFromURL();
     let location = locationAndData[0];
     const data = locationAndData[1];
@@ -141,7 +123,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
     setActiveURL(location);
     navigate(location);
 
-    updateCurrentGraph(project, title, description);
+    updateCurrentGraph(title);
   };
 
   const onPageLoad = useCallback(() => {
@@ -158,7 +140,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
     setActiveURL(updatedLocation || '/');
 
     const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation || '/'}`);
-    currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1], currentGraph[4]);
+    currentGraph && updateCurrentGraph(currentGraph[1]);
   }, [updateCurrentGraph]);
 
   useLayoutEffect(() => {
@@ -184,7 +166,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
           ${expandNav ? 'display: block' : 'display: hidden'}
         `}
       >
-        {graphArray.map(([index, title, url, project, description]) => (
+        {graphArray.map(([index, title, url]) => (
           <NavLinkContainer key={index}>
             <NavLink
               isLargeScreen={isLargeScreen}
@@ -192,7 +174,7 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
               firstOrLast={index.toString()}
               className={activeURL === url ? 'active' : ''}
               onClick={() => {
-                handleNavigation(project, title, url, description);
+                handleNavigation(url, title);
               }}
             >
               {title}

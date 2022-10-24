@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import { getDataFromAPI } from '../../utils';
-import fakeData from '../../../data/data-backup-heat-map-(Global Temperature).json';
+import { getDataFromAPI } from '../utils';
+import fakeData from '../../data/data-backup-heat-map-(Global Temperature).json';
 
 /* --------------------------------- styles --------------------------------- */
 

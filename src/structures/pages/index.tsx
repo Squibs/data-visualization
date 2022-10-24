@@ -1,11 +1,12 @@
+import { HeadProps } from 'gatsby';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { SmileyFaceGroup } from './charts';
+import { SEO, SmileyFaceGroup } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
 
-const HomePageContainer = styled.div`
+const IndexPageContainer = styled.div`
   ${tw`max-w-screen-md m-auto`}
 
   & a {
@@ -19,11 +20,11 @@ const GenerateNewFacesButton = tw.button`flex m-auto mt-4 mb-4 py-2 px-3 rounded
 
 /* -------------------------------- component ------------------------------- */
 
-const HomePage = () => {
+const IndexPage: React.FC = () => {
   const [generateNewFaces, setGenerateNewFaces] = useState(0);
 
   return (
-    <HomePageContainer>
+    <IndexPageContainer>
       <h1 tw="text-center text-2xl font-medium">About this Project</h1>
       {/* prettier-ignore */}
       <p tw="mt-8">
@@ -45,10 +46,14 @@ const HomePage = () => {
       <GenerateNewFacesButton type="button" onClick={() => setGenerateNewFaces(Math.random())}>
         Make New Faces
       </GenerateNewFacesButton>
-    </HomePageContainer>
+    </IndexPageContainer>
   );
 };
 
 /* -------------------- default props / queries / exports ------------------- */
 
-export default HomePage;
+export default IndexPage;
+
+export const Head = ({ location }: HeadProps) => {
+  return <SEO title="Home Page" />;
+};

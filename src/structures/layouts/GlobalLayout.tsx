@@ -1,15 +1,14 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import type { HeadProps } from 'gatsby';
-import { Router, RouteComponentProps } from '@reach/router';
-import { ProjectList, HomePage, SEO } from '../components';
+import { ProjectList } from '../components';
 import { useMediaQuery } from '../hooks';
-import { metaData } from '../components/ProjectList';
 
 /* ---------------------------------- types --------------------------------- */
 
-interface IndexPageProps extends RouteComponentProps {}
+interface GlobalLayoutProps {
+  children: React.ReactNode;
+}
 
 /* --------------------------------- styles --------------------------------- */
 
@@ -32,7 +31,6 @@ const PageTitle = tw.h1`text-2xl m-4 text-center`;
 
 const ProjectDisplayControls = tw.div`flex justify-between px-0.5 xs:(px-2) sm:(px-5)`;
 const ProjectDisplayTitle = tw.span`flex-1 grid place-items-center text-center`;
-
 const ProjectContainer = tw.div`max-w-screen-xl m-auto p-5 pb-0`;
 
 const StyledFooter = styled.footer`
@@ -56,36 +54,13 @@ const StyledFooter = styled.footer`
 
 /* -------------------------------- component ------------------------------- */
 
-// client only routes
-// https://stackoverflow.com/questions/63771163/how-to-redirect-all-routes-to-gatsby-index
-// which led me to gatsby example of client only routes https://github.com/gatsbyjs/gatsby/tree/master/examples/client-only-paths
-const App = () => (
-  <>
-    <Router id="reach-router">
-      <IndexPage path="/" />
-      <IndexPage path="/bar-chart" />
-      <IndexPage path="/scatterplot-graph" />
-      <IndexPage path="/heat-map" />
-      <IndexPage path="/choropleth-map" />
-      <IndexPage path="/treemap-diagram" />
-    </Router>
-  </>
-);
-
-const IndexPage: React.FC<IndexPageProps> = () => {
-  const [currentGraph, setCurrentGraph] = useState<ReactNode>(<HomePage />);
+const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
   const [currentGraphTitle, setCurrentGraphTitle] = useState<string>('Home');
-  const [currentDescription, setCurrentDescription] = useState<string>('');
 
   // used to get current graph from dropdown
-  const updateCurrentGraph = useCallback(
-    (project: ReactNode, title: string, description: string) => {
-      setCurrentGraph(project);
-      setCurrentGraphTitle(title);
-      setCurrentDescription(description);
-    },
-    [],
-  );
+  const updateCurrentGraph = useCallback((title: string) => {
+    setCurrentGraphTitle(title);
+  }, []);
 
   return (
     <PageContainer>
@@ -99,8 +74,9 @@ const IndexPage: React.FC<IndexPageProps> = () => {
         ) : (
           <ProjectList updateCurrentGraph={updateCurrentGraph} isLargeScreen />
         )}
-        <ProjectContainer>{currentGraph}</ProjectContainer>
+        <ProjectContainer>{children}</ProjectContainer>
       </div>
+
       <StyledFooter>
         <span>Designed &amp; Coded by&nbsp;</span>
         <span>
@@ -113,11 +89,4 @@ const IndexPage: React.FC<IndexPageProps> = () => {
   );
 };
 
-/* -------------------- default props / queries / exports ------------------- */
-
-export default App;
-
-export const Head = ({ location }: HeadProps) => {
-  const path = metaData[location.pathname];
-  return <SEO title={path.title} description={path.description} />;
-};
+export default GlobalLayout;

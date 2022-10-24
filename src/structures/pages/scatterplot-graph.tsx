@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import getDataFromAPI from '../../utils/getDataFromAPI';
-import fakeData from '../../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
+import getDataFromAPI from '../utils/getDataFromAPI';
+import fakeData from '../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
 
 /* --------------------------------- styles --------------------------------- */
 

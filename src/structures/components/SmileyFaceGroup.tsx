@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as d3 from 'd3';
 import tw from 'twin.macro';
 import SmileyFace from './SmileyFace';
@@ -6,10 +6,6 @@ import SmileyFace from './SmileyFace';
 /* --------------------------------- styles --------------------------------- */
 
 /* ---------------------------------- types --------------------------------- */
-
-type SmileyFaceGroupProps = {
-  generateNewFaces: number;
-};
 
 /* -------------------------------- component ------------------------------- */
 
