@@ -3,6 +3,7 @@ import { navigate } from 'gatsby';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import twColors from 'tailwindcss/colors';
+import { useLocation } from '@reach/router';
 import { BarChart, ScatterplotGraph, HeatMap, ChoroplethMap, TreemapDiagram } from './charts';
 import HomePage from './HomePage';
 
@@ -56,42 +57,42 @@ const graphArray = [
   [
     0,
     'Home',
-    '/?',
+    '/',
     <HomePage />,
     'A combination of all my freeCodeCamp Data Visualization projects created using D3.js.',
   ],
   [
     1,
     'Bar Chart',
-    '/?bar-chart',
+    '/bar-chart',
     <BarChart />,
     'Data visualization project, bar chart, displaying information about the United States GDP over 68 years.',
   ],
   [
     2,
     'Scatterplot Graph',
-    '/?scatterplot-graph',
+    '/scatterplot-graph',
     <ScatterplotGraph />,
     'Data visualization project, scatterplot graph, displaying information about doping allegations in professional bicycling.',
   ],
   [
     3,
     'Heat Map',
-    '/?heat-map',
+    '/heat-map',
     <HeatMap />,
     'Data visualization project, heat map, displaying information about the global land-surface temperatures over 262 years.',
   ],
   [
     4,
     'Choropleth Map',
-    '/?choropleth-map',
+    '/choropleth-map',
     <ChoroplethMap />,
     'Data visualization project, choropleth map, displaying information about the United States educational attainment from 2010 - 2014.',
   ],
   [
     5,
     'Treemap Diagram',
-    '/?treemap-diagram',
+    '/treemap-diagram',
     <TreemapDiagram />,
     'Data visualization project, treemap diagram, featuring three different graphs relating to video game sales, kickstarter pledges, and movie sales.',
   ],
@@ -99,29 +100,25 @@ const graphArray = [
 
 const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListProps) => {
   const [expandNav, setExpandNav] = useState(false);
-  const [activeURL, setActiveURL] = useState('/?');
+  const [activeURL, setActiveURL] = useState('');
+  const reachLocation = useLocation();
 
   // shared between page load and navigation
   const getLocationAndDataFromURL = () => {
-    const windowLocation = window.location.search;
-    let updatedLocation = windowLocation === '' ? '/?' : `/${window.location.search}`;
-
-    // needed for freeCodeCamp, they append '=' at the end of my url for whatever reason
-    // probably because i'm doing this all weird and using the usual query/search symbol '?'
-    if (updatedLocation.endsWith('=')) updatedLocation = updatedLocation.slice(0, -1);
+    const windowLocation = reachLocation.pathname;
 
     // store only the first data parameter if multiple exist
-    const queryParams = new URLSearchParams(updatedLocation);
-    // const data = `&treemap-data=${queryParams.get('treemap-data')}`;
-    let data = '';
+    const queryParams = new URLSearchParams(reachLocation.search);
 
+    // store 'treemap-data' parameter
+    let data = '';
     if (queryParams.get('treemap-data')) {
-      data = `&treemap-data=${queryParams.get('treemap-data')}`;
+      data = `?treemap-data=${queryParams.get('treemap-data')}`;
     } else {
       data = '';
     }
 
-    return [updatedLocation, data || ''];
+    return [windowLocation, data || ''];
   };
 
   const handleNavigation = (
@@ -153,9 +150,9 @@ const ProjectList = ({ updateCurrentGraph, isLargeScreen = false }: ProjectListP
       if (location.includes(u)) updatedLocation = u;
     });
 
-    setActiveURL(updatedLocation || '/?');
+    setActiveURL(updatedLocation || '/');
 
-    const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation || '/?'}`);
+    const currentGraph = graphArray.find((graph) => graph[2] === `${updatedLocation || '/'}`);
     currentGraph && updateCurrentGraph(currentGraph[3], currentGraph[1], currentGraph[4]);
   }, [updateCurrentGraph]);
 

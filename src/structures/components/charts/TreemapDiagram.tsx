@@ -353,7 +353,7 @@ const TreemapDiagram = () => {
               currentSVG.innerHTML = '';
             }
             setCurrentData(null);
-            navigate('?treemap-diagram&treemap-data=videogame');
+            navigate('?treemap-data=videogame');
             setSelectedGraph('videogame');
           }}
         >
@@ -368,7 +368,7 @@ const TreemapDiagram = () => {
               currentSVG.innerHTML = '';
             }
             setCurrentData(null);
-            navigate('?treemap-diagram&treemap-data=kickstarter');
+            navigate('?treemap-data=kickstarter');
             setSelectedGraph('kickstarter');
           }}
         >
@@ -383,7 +383,7 @@ const TreemapDiagram = () => {
               currentSVG.innerHTML = '';
             }
             setCurrentData(null);
-            navigate('?treemap-diagram&treemap-data=movie');
+            navigate('?treemap-data=movie');
             setSelectedGraph('movie');
           }}
         >
