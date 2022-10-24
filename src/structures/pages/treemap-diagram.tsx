@@ -6,9 +6,9 @@ import * as d3 from 'd3';
 import twColors from 'tailwindcss/colors';
 import { getDataFromAPI } from '../utils';
 
-import fakeVideoGameData from '../../data/data-backup-treemap-diagram-(Video Game Sales).json';
-import fakeKickstarterData from '../../data/data-backup-treemap-diagram-(Kickstarter Pledges).json';
-import fakeMovieData from '../../data/data-backup-treemap-diagram-(Movie Sales).json';
+// import fakeVideoGameData from '../../data/data-backup-treemap-diagram-(Video Game Sales).json';
+// import fakeKickstarterData from '../../data/data-backup-treemap-diagram-(Kickstarter Pledges).json';
+// import fakeMovieData from '../../data/data-backup-treemap-diagram-(Movie Sales).json';
 import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
@@ -304,8 +304,14 @@ const TreemapDiagram = () => {
     if (selectedGraph !== '') {
       switch (selectedGraph) {
         case 'videogame':
-          // videoGameData ?? getDataFromAPI('videogame');
-          setVideoGameData(fakeVideoGameData);
+          videoGameData ??
+            getDataFromAPI(
+              `https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json`,
+              setLoading,
+              setError,
+              setVideoGameData,
+            );
+          // setVideoGameData(fakeVideoGameData);
           setTitle('Video Game Sales');
           setSource(
             'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json',
@@ -313,8 +319,14 @@ const TreemapDiagram = () => {
           setDescription('Top 100 most sold video games grouped by platform');
           break;
         case 'kickstarter':
-          // kickstarterData ?? getDataFromAPI('kickstarter');
-          setKickStarterData(fakeKickstarterData);
+          kickstarterData ??
+            getDataFromAPI(
+              `https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/kickstarter-funding-data.json`,
+              setLoading,
+              setError,
+              setKickStarterData,
+            );
+          // setKickStarterData(fakeKickstarterData);
           setTitle('Kickstarter Pledges');
           setSource(
             'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/kickstarter-funding-data.json',
@@ -322,8 +334,14 @@ const TreemapDiagram = () => {
           setDescription('Top 100 most pledged kickstarter campaigns grouped by category');
           break;
         case 'movie':
-          // movieData ?? getDataFromAPI('movie');
-          setMovieData(fakeMovieData);
+          movieData ??
+            getDataFromAPI(
+              `https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json`,
+              setLoading,
+              setError,
+              setMovieData,
+            );
+          // setMovieData(fakeMovieData);
           setTitle('Movie Sales');
           setSource(
             'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json',
@@ -335,7 +353,7 @@ const TreemapDiagram = () => {
           setSelectedGraph('videogame');
       }
     }
-  }, [selectedGraph]);
+  }, [kickstarterData, movieData, selectedGraph, videoGameData]);
 
   // store optional treemap-data parameter on load
   useEffect(() => {

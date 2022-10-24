@@ -3,7 +3,7 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import { getDataFromAPI } from '../utils';
-import fakeData from '../../data/data-backup-heat-map-(Global Temperature).json';
+// import fakeData from '../../data/data-backup-heat-map-(Global Temperature).json';
 import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
@@ -211,21 +211,21 @@ const HeatMap = () => {
   useEffect(() => {
     const getData = () =>
       getDataFromAPI(
-        `https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json`,
+        `https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json`,
         setLoading,
         setError,
         setData,
       );
 
-    // getData();
+    getData();
 
-    const tempData = () => {
-      setData(fakeData as unknown as GlobalTemperatureData);
-      setLoading(false);
-      setError(null);
-    };
+    // const tempData = () => {
+    //   setData(fakeData as unknown as GlobalTemperatureData);
+    //   setLoading(false);
+    //   setError(null);
+    // };
 
-    tempData();
+    // tempData();
   }, []);
 
   // add data to bar chart svg

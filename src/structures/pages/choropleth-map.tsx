@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import { getDataFromAPI } from '../utils';
-import fakeCountyData from '../../data/data-backup-choropleth-map-(US County Data).json';
-import fakeEducationData from '../../data/data-backup-choropleth-map-(US Education Data).json';
+// import fakeCountyData from '../../data/data-backup-choropleth-map-(US County Data).json';
+// import fakeEducationData from '../../data/data-backup-choropleth-map-(US Education Data).json';
 import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
@@ -189,24 +189,32 @@ const ChoroplethMap = () => {
 
   // fetch data from freeCodeCamp onMount
   useEffect(() => {
-    // const getData = () =>
-    //   getDataFromAPI(
-    //     `https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json`,
-    //     setLoading,
-    //     setError,
-    //     setData,
-    //   );
+    const getData = () => {
+      getDataFromAPI(
+        `https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json`,
+        setLoading,
+        setError,
+        setEducationData,
+      );
 
-    // getData();
-
-    const tempData = () => {
-      setCountyData(fakeCountyData);
-      setEducationData(fakeEducationData);
-      setLoading(false);
-      setError(null);
+      getDataFromAPI(
+        `https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json`,
+        setLoading,
+        setError,
+        setCountyData,
+      );
     };
 
-    tempData();
+    getData();
+
+    // const tempData = () => {
+    //   setCountyData(fakeCountyData);
+    //   setEducationData(fakeEducationData);
+    //   setLoading(false);
+    //   setError(null);
+    // };
+
+    // tempData();
   }, []);
 
   // add data to bar chart svg

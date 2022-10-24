@@ -11,7 +11,7 @@ const getDataFromAPI = async (
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error: Status ${response.status}`); // not the endpoint we want
 
-    let actualData = await response.json();
+    const actualData = await response.json();
 
     setData(actualData);
   } catch (err: any) {

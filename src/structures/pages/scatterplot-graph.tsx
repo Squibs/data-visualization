@@ -3,7 +3,7 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import getDataFromAPI from '../utils/getDataFromAPI';
-import fakeData from '../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
+// import fakeData from '../../data/data-backup-scatterplot-graph-(Cyclist Data).json';
 import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
@@ -107,7 +107,7 @@ const ScatterplotGraph = () => {
     // dots
     d3.select('.plot-area')
       .selectAll('.dot')
-      .data(dateDataSet.map((d, i) => scaleTime(d)))
+      .data(dateDataSet.map((d) => scaleTime(d)))
       .join('circle')
       .attr('class', 'dot')
       .attr('r', 7)
@@ -184,15 +184,15 @@ const ScatterplotGraph = () => {
         setData,
       );
 
-    // getData();
+    getData();
 
-    const tempData = () => {
-      setData(fakeData as unknown as CyclistData[]);
-      setLoading(false);
-      setError(null);
-    };
+    // const tempData = () => {
+    //   setData(fakeData as unknown as CyclistData[]);
+    //   setLoading(false);
+    //   setError(null);
+    // };
 
-    tempData();
+    // tempData();
   }, []);
 
   // add data to bar chart svg

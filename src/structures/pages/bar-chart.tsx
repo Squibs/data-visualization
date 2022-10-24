@@ -3,7 +3,7 @@ import tw from 'twin.macro';
 import * as d3 from 'd3';
 import styled from 'styled-components';
 import getDataFromAPI from '../utils/getDataFromAPI';
-import fakeData from '../../data/data-backup-bar-chart-(US GDP).json';
+// import fakeData from '../../data/data-backup-bar-chart-(US GDP).json';
 import { SEO } from '../components';
 
 /* --------------------------------- styles --------------------------------- */
@@ -144,15 +144,15 @@ const BarChart = () => {
         setData,
       );
 
-    // getData();
+    getData();
 
-    const tempData = () => {
-      setData(fakeData as unknown as USGDPData);
-      setLoading(false);
-      setError(null);
-    };
+    // const tempData = () => {
+    //   setData(fakeData as unknown as USGDPData);
+    //   setLoading(false);
+    //   setError(null);
+    // };
 
-    tempData();
+    // tempData();
   }, []);
 
   // add data to bar chart svg
